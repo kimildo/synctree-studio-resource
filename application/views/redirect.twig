@@ -1,0 +1,18 @@
+{# all post data #}
+{% set by_pass_value = (by_pass_value is defined) ? by_pass_value : [] %}
+{% set f_method = (f_method is defined) ? f_method : 'POST' %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>Sending Data.....</title>
+</head>
+<body onLoad="document.getElementById('f_redirect').submit();">
+<form id="f_redirect" method="{{ f_method }}" action="{{ return_url }}">
+{% for key, value in by_pass_value %}
+    <input type='hidden' name='{{ key }}' value='{{ value }}' >
+{% endfor %}
+</form>
+</body>
+</html>

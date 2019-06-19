@@ -1,0 +1,46 @@
+{% set htmlId = (extr_page is defined) ? "id=extr-page" : '' %}
+{% set timestamp =  "now"|date("Y-m-d H:i:s") %}
+{% set s3Endpoint =  constant('libraries\\constant\\CommonConst::AWS_S3_END_POINT') %}
+<!DOCTYPE html>
+<html lang="ko" {{ htmlId }}>
+<head>
+    {% block header %}
+        {% include 'header.twig' %}
+    {% endblock %}
+</head>
+<body class="smart-style-2 {#fixed-header fixed-navigation fixed-ribbon fixed-page-footer menu-on-top#}">
+{% include 'top.twig' %}
+{% include 'aside.twig' %}
+
+<div id="main" role="main">
+	<div id="wrapper">
+		<div id="notice">[공지] 공지사항 텍스트가 들어갑니다.</div>
+		<div id="ribbon">
+			<!-- breadcrumb -->
+			<ol class="breadcrumb" id="top_page_title">
+				<li>Home</li>
+				<li>{{ page_title }}</li>
+			</ol>
+			<!-- end breadcrumb -->
+		</div>
+
+		<!-- MAIN CONTENT -->
+		<div id="content">
+		{% block content %}{% endblock %}
+		</div>
+		<!-- END MAIN CONTENT -->
+	</div>
+	
+</div>
+
+{% include 'footer.twig' %}
+
+{% block common_script %}
+{% include 'script.twig' %}
+{% endblock %}
+
+{% block page_script %}{% endblock %}
+
+{% include '/analytics/analyticstracking.twig' %}
+</body>
+</html>

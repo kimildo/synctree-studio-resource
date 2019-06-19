@@ -1,0 +1,113 @@
+html {
+    background : none;
+    position: relative;
+}
+
+.padding-15 {
+    padding: 15px !important;
+}
+
+.padding-20 {
+    padding: 20px !important;
+}
+
+.margin-left5 {
+    margin-left: 5px !important;
+}
+
+.margin-left10 {
+    margin-left: 10px !important;
+}
+
+.margin-left15 {
+    margin-left: 15px !important;
+}
+
+.margin-left20 {
+    margin-left: 20px !important;
+}
+.margin-bottom10 {
+    margin-bottom: 10px !important;
+}
+
+.modal-body {
+    padding-top: 0 !important;
+}
+
+.smart-form .label-bold {
+    font-weight: bold;
+}
+
+.margin-left-auto {
+    margin : 0 auto;
+}
+
+.margin-top20 {
+    margin-top: 20px !important;
+}
+
+.margin-top30 {
+    margin-top: 20px !important;
+}
+
+
+#sec_terms_item {
+    max-height:100%;
+    overflow-y:scroll;
+}
+
+.smart-form .tooltip {
+    opacity: 0.7 !important;
+}
+
+.smart-form .icon-prepend-url {
+    position: absolute;
+    top: 5px;
+    width: 65px;
+    height: 22px;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+}
+
+.prev-image {
+    max-width: 100%;
+}
+
+.introduction-image-sec {
+    width: 767px;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    max-height: 300px;
+}
+
+#extr-page .hero {
+    background: none;
+}
+
+#logo-group {
+    overflow-y: hidden;
+}
+
+#inbox-table thead tr {
+    color: #FFFFFF;
+    background-image: none;
+    background-color: #2C3742;
+}
+
+#inbox-table.table tbody>tr>td {
+    border-color: #dadada!important;
+}
+
+#inbox-table.table tbody>tr.table-selected {
+    background-color: #d0cece!important;
+}
+
+
+#button_add_app {
+    width: 80%;
+}
+
+.inbox-side-bar > .btn {
+    margin-bottom: 5px;
+}

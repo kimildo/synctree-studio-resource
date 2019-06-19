@@ -1,0 +1,87 @@
+.home-section {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.page-footer {
+    position: fixed;
+}
+
+.panel-body header {
+    font-weight: 700;
+    font-size: 21px;
+    margin-bottom: 40px;
+}
+
+.panel-body section {
+    padding: 0;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+    margin-bottom: 20px;
+    text-align: left;
+    line-height: 22px;
+}
+
+.panel-body section.top {
+
+}
+
+.panel-body span {
+    display: block;
+    margin: 0 0 5px 10px;
+}
+
+.panel-body .subject {
+    margin-left: 0;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.panel-body ul, .panel-body ol {
+    margin: 13px 0 13px 30px;
+}
+
+.panel-body ol {
+    padding: 0;
+}
+
+.panel-body ol li {
+    list-style: decimal;
+    position: relative;
+}
+
+.panel-body ol.list li {
+    list-style: decimal !important;
+    position: relative;
+}
+
+.panel-body ul li {
+    list-style: disc;
+    position: relative;
+}
+
+.panel-body ul.list li {
+    list-style: disc !important;
+    position: relative;
+}
+
+.panel-body ul.list-arrow li {
+    list-style: none !important;
+}
+
+.panel-body ul.list-arrow li:before {
+    content: "▶ ";
+}
+
+.panel-body ol.no-list-style li, .panel-body ol.no-list-style li {
+    list-style: none;
+}
+
+.panel-body li.no-list-style {
+    list-style: none;
+}
+
+#etc_section li span:first-child {
+    font-weight: bolder;
+}
+

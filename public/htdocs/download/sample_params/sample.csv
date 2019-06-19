@@ -1,0 +1,4 @@
+key,var type,description,required
+req_num1,integer,sample data,FALSE
+req_num2,integer,sample data,FALSE
+etc,string,asd,TRUE

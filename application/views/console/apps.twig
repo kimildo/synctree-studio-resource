@@ -1,0 +1,102 @@
+{% extends "layout-with-left.twig" %}
+{% set uid = user_info['sess_userid'] | split('@') %}
+{% block header %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/htdocs/css/swiper/swiper.min.css">
+    <link rel="stylesheet" href="/htdocs/css/apps.css">
+
+{% endblock header %}
+
+{% block content %}
+<section>
+    <div class="inbox-nav-bar no-content-padding">
+        <h1 class="page-title txt-color-blueDark hidden-tablet">Apps</h1>
+        <div class="inbox-checkbox-triggered pull-right title-btn-wrap">
+			<a class="button-add-app btn-new-app icon" href="javascript:void(0);">
+				New App
+			</a>
+			<a id="button_app_del" class="btn-del-app icon" href="javascript:void(0);">			
+				Discard App</a>
+        </div>
+    </div>
+
+    <div id="inbox-content" class="inbox-body no-content-padding">
+        <form class="form-horizontal" id="form_apps_list" name="form_apps_list" method="post" action="/console/apps/remove" >
+			<div class="swiper-container table-wrap custom-scroll animated fast fadeInRight" style="opacity: 1;visibility: hidden;">
+				<div class="swiper-wrapper">
+					{% if apps is not empty %}
+						{% for row in apps %}
+							<div class="swiper-slide">
+								
+								<div class="trash-check">
+									<span class="checkbox no-padding">
+										<label>
+										  <input name="apps[]" id="app_chk_{{ row.app_id }}" type="checkbox" class="checkbox style-0"
+												 data-app-id="{{ row.app_id }}" value="{{ row.app_id }}" />
+										  <span></span>
+										</label>
+									</span>
+								</div>
+								<div class="swiper-content">
+									<div class="design">
+										<p>
+											{% if row.type == 1 %}
+											<img src="/htdocs/img/apps/illust-biz@3x.png" />
+											{% elseif row.type == 2 %}
+											<img src="/htdocs/img/apps/illust-chatbot@3x.png" />
+											{% elseif row.type == 3 %}
+											<img src="/htdocs/img/apps/illust-webpage@3x.png" />
+											{% else %}
+											<img src="/htdocs/img/apps/illust-webpage@3x.png" />
+											{% endif %}
+										</p>
+										<h5>{{ row.app_name }}</h5>
+										{% if(row.is_new is defined) %}
+											<div class='new'><i class='fa fa-star' ></i></div>
+										{% endif %}
+									</div>
+									<div class="bottom">
+										<span class="user-id">{{ uid[0] }}</span>
+										<span class="date">{{ row.reg_date | date("Y-m-d") }}</span>
+										<a class="enter app-enter" rel="tooltip" data-placement="top"
+									   		data-original-title="enter"
+										    data-app-id="{{ row.app_id }}"
+										    href="#"
+										    {#href="/{{ dictionary['lang'] }}/console/apps/bunit/{{ row.seq }}"#}><i class="fa fa-arrow-right"></i></a>
+										<a class="button-app-delete" rel="tooltip" title=""
+									   		data-app-id="{{ row.app_id }}"
+									   		data-placement="right"
+									   		data-original-title="{{ dictionary.button.remove }}"
+									   		href="javascript:void(0);"></a>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+						<div class="swiper-slide">_FormCheckRequired
+							<button type="button" class="button-add-app" title='create new app'>create new app</button>
+						</div>
+					{% else %}
+						<div class="swiper-slide">
+							<div class="title">Not exist App Data</div>
+							<button type="button" class="button-add-app" title='create new app'>create new app</button>
+						</div>
+					{% endif %}
+				</div>
+				{% if apps is not empty %}
+				<!-- Add Pagination -->
+				<div class="swiper-pagination"></div>
+				<!-- Add Arrows -->
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
+				{% endif %}
+			</div>
+        </form>
+    </div>
+</section>
+{% include '/console/modal/app-add-modal.twig' %}
+{% endblock %}
+
+{% block page_script %}
+<script src="/htdocs/js/swiper/swiper.min.js"></script>
+{% include '/console/script/apps-script.twig' %}
+{% endblock %}

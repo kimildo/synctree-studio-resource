@@ -1,1 +1,2 @@
-# synctree-studio-resource
+# SynctreeStudio V2
+

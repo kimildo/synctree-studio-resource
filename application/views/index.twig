@@ -1,0 +1,103 @@
+{% set htmlId = (extr_page is defined) ? "id=extr-page" : '' %}
+{% set s3Endpoint =  constant('libraries\\constant\\CommonConst::AWS_S3_END_POINT') %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    {% block header %}
+        {% include 'header.twig' %}
+    {% endblock %}
+</head>
+<body class="smart-style-2">
+<div id="app"></div>
+<div id="draggable"></div>
+</body>
+<script>
+    var global_data = {
+        dictionary: {{ dictionary | json_encode | raw }},
+    };
+</script>
+<script src="{{ s3Endpoint }}/static/js/libs/jquery-2.1.1.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/libs/jquery-ui-1.10.3.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/plugin/pace/pace.min.js"></script>
+<script>
+    paceOptions = {
+        restartOnPushState: false
+    };
+
+</script>
+
+<!-- IMPORTANT: APP CONFIG -->
+<script src="/htdocs/js/app.config.js?v={{ SCRIPT_UPDATED }}"></script>
+
+<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+<script src="{{ s3Endpoint }}/static/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script>
+
+<!-- BOOTSTRAP JS -->
+<script src="{{ s3Endpoint }}/static/js/bootstrap/bootstrap.min.js"></script>
+
+<!-- CUSTOM NOTIFICATION -->
+<script src="{{ s3Endpoint }}/static/js/notification/SmartNotification.min.js"></script>
+
+<!-- JARVIS WIDGETS -->
+<script src="{{ s3Endpoint }}/static/js/smartwidgets/jarvis.widget.min.js"></script>
+
+<!-- EASY PIE CHARTS -->
+<script src="{{ s3Endpoint }}/static/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+
+<!-- SPARKLINES -->
+<script src="{{ s3Endpoint }}/static/js/plugin/sparkline/jquery.sparkline.min.js"></script>
+
+<!-- JQUERY VALIDATE -->
+<script src="{{ s3Endpoint }}/static/js/plugin/jquery-validate/jquery.validate.min.js"></script>
+
+<!-- JQUERY MASKED INPUT -->
+<script src="{{ s3Endpoint }}/static/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+
+<!-- JQUERY FORM -->
+<script src="{{ s3Endpoint }}/static/js/plugin/jquery-form/jquery-form.min.js"></script>
+
+<!-- JQUERY SELECT2 INPUT -->
+<script src="{{ s3Endpoint }}/static/js/plugin/select2/select2.min.js"></script>
+
+<!-- JQUERY UI + Bootstrap Slider -->
+<script src="{{ s3Endpoint }}/static/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+
+<!-- browser msie issue fix -->
+<script src="{{ s3Endpoint }}/static/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+
+<!-- FastClick: For mobile devices -->
+<script src="{{ s3Endpoint }}/static/js/plugin/fastclick/fastclick.min.js"></script>
+
+<!--[if IE 8]>
+<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+<![endif]-->
+
+<!-- Demo purpose only -->
+{#<script src="{{ s3Endpoint }}/static/js/demo.min.js"></script>#}
+
+<!-- MAIN APP JS FILE -->
+<script src="{{ s3Endpoint }}/static/js/app.min.js"></script>
+
+<!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
+<!-- Voice command : plugin -->
+<script src="{{ s3Endpoint }}/static/js/speech/voicecommand.min.js"></script>
+
+<!-- PAGE RELATED PLUGIN(S) -->
+<script src="{{ s3Endpoint }}/static/js/plugin/jquery-form/jquery-form.min.js"></script>
+
+<script src="{{ s3Endpoint }}/static/js/plugin/datatables/jquery.dataTables.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/plugin/datatables/dataTables.colVis.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
+{#<script src="{{ s3Endpoint }}/static/js/plugin/maxlength/bootstrap-maxlength.min.js"></script>#}
+<script src="{{ s3Endpoint }}/static/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
+{#<script src="{{ s3Endpoint }}/static/js/plugin/clockpicker/clockpicker.min.js"></script>#}
+<script src="{{ s3Endpoint }}/static/js/plugin/bootstrap-tags/bootstrap-tagsinput.min.js"></script>
+{#<script src="{{ s3Endpoint }}/static/js/plugin/noUiSlider/jquery.nouislider.min.js"></script>#}
+{#<script src="{{ s3Endpoint }}/static/js/plugin/ion-slider/ion.rangeSlider.min.js"></script>#}
+<script src="{{ s3Endpoint }}/static/js/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+<script src="/htdocs/js/react/studio-bundle.js?v={{ SCRIPT_UPDATED }}"></script>
+{% include '/analytics/analyticstracking.twig' %}
+</html>

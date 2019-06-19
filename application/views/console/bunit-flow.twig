@@ -1,0 +1,91 @@
+{% extends "layout-with-left.twig" %}
+
+{% block header %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/htdocs/css/timeline.css">
+{% endblock header %}
+
+{% block content %}
+
+    <section class="inbox-nav-bar no-content-padding">
+        <h1 class="page-title txt-color-blueDark hidden-tablet"><i class="fa fa-fw fa-sitemap"></i> Biz Flow</h1>
+        <div class="inbox-checkbox-triggered">
+            <div class="btn-group">
+                <a href="javascript:void(0);" rel="tooltip" title="" id="button_biz_del"
+                   data-app-id="{{ user_info['selected_app_id'] }}"
+                   data-placement="bottom"
+                   data-original-title="{{ dictionary.button.remove }}"
+                   class="deletebutton btn btn-default"><strong><i class="fa fa-refresh fa-lg"></i></strong></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="inbox-content" class="inbox-body no-content-padding">
+
+
+        <div class="inbox-side-bar">
+            <button id="button_add_bunit"
+                    data-app-id="{{ user_info.selected_app_id }}"
+                    class="btn btn-success btn-block"><strong>{{ dictionary.button.save }}</strong></button>
+        </div>
+
+        <div class="table-wrap custom-scroll animated fast fadeInRight" style="opacity: 1;">
+            <div class="well well-sm">
+
+                <!-- Timeline Content -->
+                <div class="timeline-wrapper">
+
+                    <div class="smart-timeline">
+                        <ul class="smart-timeline-list">
+                            <li>
+                                <div class="smart-timeline-icon">
+                                    <i class="fa fa-file-text"></i>
+                                </div>
+                                <div class="smart-timeline-content">
+
+                                    <section class="sec-unit">
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-default"><i
+                                                    class="fa fa-plus text-danger"></i> ADD UNIT</a>
+                                    </section>
+
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="smart-timeline">
+                        <ul class="smart-timeline-list">
+                            <li>
+                                <div class="smart-timeline-icon">
+                                    <i class="fa fa-file-text"></i>
+                                </div>
+                                <div class="smart-timeline-content">
+
+                                    <section class="sec-unit">
+                                        &nbsp;
+                                    </section>
+
+                                </div>
+                            </li>
+                            {#<li class="text-center">
+                                <a href="javascript:void(0)" class="btn btn-sm btn-default"><i class="fa fa-arrow-down text-muted"></i> LOAD MORE</a>
+                            </li>#}
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- END Timeline Content -->
+            </div>
+
+        </div>
+
+
+    </section>
+
+{% endblock %}
+
+
+{% block page_script %}
+    {% include '/console/script/bunit-flow-script.twig' %}
+{% endblock %}

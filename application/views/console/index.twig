@@ -1,0 +1,72 @@
+{% extends "layout-no-left.twig" %}
+{% block inc_css %}
+<style>
+#content{margin-top:220px;}
+#content > ul{display: flex;flex-direction: row;justify-content: center;align-items: center;}
+#content > ul > li{list-style-type: none;text-align: center;margin-right:40px;}
+#content > ul > li:last-child{margin-right: 0;}
+#content > ul > li .img{width:160px;height:160px;background-color:#fff;border-radius: 93.7px;background-size:48px;background-repeat: no-repeat; background-position: center; }
+
+#content > ul > li .img.dash{background-image: url('/htdocs/img/ic-dash-board-01-n@3x.png');}
+#content > ul > li .img.apps{background-image: url('/htdocs/img/ic-app-01-n@3x.png');}
+#content > ul > li .img.marketing{background-image: url('/htdocs/img/ic-marketing-01-n@3x.png');}
+#content > ul > li .img.management{background-image: url('/htdocs/img/ic-manage-01-n@3x.png');}
+#content > ul > li .img.b2b{background-image: url('/htdocs/img/ic-gateway-01-n@3x.png');}
+#content > ul > li:hover .img.dash{background-image: url('/htdocs/img/ic-dash-board-01-h@3x.png');}
+#content > ul > li:hover .img.apps{background-image: url('/htdocs/img/ic-app-01-h@3x.png');}
+#content > ul > li:hover .img.marketing{background-image: url('/htdocs/img/ic-marketing-01-h@3x.png');}
+#content > ul > li:hover .img.management{background-image: url('/htdocs/img/ic-manage-01-h@3x.png');}
+#content > ul > li:hover .img.b2b{background-image: url('/htdocs/img/ic-gateway-01-h@3x.png');}
+
+#content > ul > li:hover .img{background-color:#4dafff;}
+#content > ul > li .txt{margin-top:26px;font-size: 18px;color:#34495e;}
+</style>
+{% endblock %}
+{% block content %}
+    {% include 'top.twig' %}
+    <!-- Container -->
+	
+	<div role="main">
+		<div id="wrapper">
+			<div id="notice">[공지] 공지사항 텍스트가 들어갑니다.</div>
+			<!-- MAIN CONTENT -->
+			<div id="content">
+				<ul>
+					<li>
+						<a href="/{{ dictionary['lang'] }}/console/dashboard" title="{{ dictionary['aside']['dashboard'] }}">
+							<p class='img dash'></p>
+							<p class='txt'>{{ dictionary['aside']['dashboard'] }}</p>
+						</a>
+					</li>
+					<li>
+						<a href="/{{ dictionary['lang'] }}/console/apps" title="{{ dictionary['aside']['apps'] }}">
+							<p class='img apps'></p>
+							<p class='txt'>{{ dictionary['aside']['apps'] }}</p>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="not-ready" title="{{ dictionary['aside']['marketing'] }}">
+							<p class='img marketing'></p>
+							<p class='txt'>{{ dictionary['aside']['marketing'] }}</p>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="not-ready" title="{{ dictionary['aside']['management'] }}">
+							<p class='img management'></p>
+							<p class='txt'>{{ dictionary['aside']['management'] }}</p>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="not-ready" title="{{ dictionary['aside']['B2B'] }}">
+							<p class='img b2b'></p>
+							<p class='txt'>{{ dictionary['aside']['B2B'] }}</p>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+	</div>
+    <!-- Footer -->
+    
+{% endblock content %}

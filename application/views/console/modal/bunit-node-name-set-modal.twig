@@ -1,0 +1,28 @@
+<div class="modal fade in" id="modal_biz_node_name_set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><i class="fa fa-lg fa-fw fa-puzzle-piece"></i> <span id="">Node Name</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="widget-body no-padding">
+                    <form class="smart-form" id="frm_set_client_name" name="frm_set_client_name" onsubmit="return false;">
+                        <fieldset>
+                            <section>
+                                <label class="label">Name</label>
+                                <label class="input">
+                                    <input type="text" id="biz_node_name" name="biz_node_name" required="required" maxlength="10"/>
+                                </label>
+                            </section>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" id="biz_save_node_name" class="btn btn-success"><i class="fa fa-save"></i> {{ dictionary.button.save }}</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

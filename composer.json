@@ -1,0 +1,51 @@
+{
+    "name": "slim/slim-skeleton",
+    "description": "A Slim Framework skeleton application for rapid development",
+    "keywords": ["microframework", "rest", "router", "psr7"],
+    "homepage": "http://github.com/slimphp/Slim-Skeleton",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Josh Lockhart",
+            "email": "info@joshlockhart.com",
+            "homepage": "http://www.joshlockhart.com/"
+        }
+    ],
+    "require": {
+        "php": ">=7.3.0",
+        "slim/slim": "^3.0",
+        "slim/php-view": "^2.0",
+        "slim/csrf": "^0.8.1",
+        "slim/pdo": "^1.10",
+        "slim/twig-view": "^2.2",
+        "slim/flash": "^0.4.0",
+        "monolog/monolog": "^1.17",
+        "predis/predis": "^1.1",
+        "php-ds/php-ds": "^1.1",
+        "aws/aws-sdk-php": "^3.26",
+        "guzzlehttp/guzzle": "^5.3.3|^6.2.1",
+        "guzzlehttp/psr7": "^1.4.1",
+        "guzzlehttp/promises": "~1.0",
+        "mtdowling/jmespath.php": "~2.2",
+        "nette/php-generator": "3.2.*",
+        "ramsey/uuid": "^3.8",
+        "phpzip/phpzip": ">=2.0.7",
+        "galbar/jsonpath": "dev-master",
+        "ext-json": "*",
+        "ext-redis": "*",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=4.8 < 6.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+	"scripts": {
+        "start": "php -S 0.0.0.0:8080 -t public public/index.php",
+        "test": "phpunit --debug"
+	}
+
+}

@@ -1,0 +1,154 @@
+{% extends "layout-with-left.twig" %}
+{% block header %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/htdocs/css/custom.css">
+	<link rel="stylesheet" href="/htdocs/css/highlight/darkula.css">
+	
+{% endblock header %}
+
+{% block content %}
+    <section>
+
+        <div class="biz-top">
+			
+			<a class='back' href='/{{ dictionary.lang }}/console/apps'>뒤로가기</a>
+			
+			<div class='biz-top-right'>
+				<h1>{{ selected_app.name }}</h1>	
+				<p class='info'>
+					<span class='app-type app-{{ selected_app.type }}'>
+						{% if selected_app.type == 1 %}
+						Biz Unit
+						{% elseif selected_app.type == 2 %}
+						Chatbot
+						{% elseif selected_app.type == 3 %}
+						Web Page
+						{% else %}
+						Iframe
+						{% endif %}
+					</span>
+					<span class='date'>{{ selected_app.reg_date | date("Y.m.d") }} 생성</span>
+					<span class='status status-live'><em></em>LIVE</span>
+				</p>
+			</div>
+			
+            
+        </div>
+		<div class='biz-content'>
+			{% if biz_ops is not empty %}
+			{% for row in biz_ops %}
+			<div class='biz-list' id="biz_{{ row.biz_id }}" data-app-id="{{ user_info.selected_app_id }}" data-biz-id="{{ row.biz_id }}">
+				{% if(row.is_new is defined) %}
+					<div class='new'><i class='fa fa-star' ></i></div>
+				{% endif %}
+				<div class="row">
+					<div class="col-lg-7 col-sm-12">
+						<h2>{{ row.biz_name }}</h2>
+							<p class='desc'>{{ row.biz_desc }}</p>
+							<p class='info'>
+								<span>{{ row.operators | length }} Operators</span>
+								<span>{{ row.operators | length }} partners</span>
+								{% if row.has_build_history is not empty %}
+									<span>Last Build Version : {{ row.last_build.biz_ops_version }} ({{ row.last_build.build_date }}) </span>
+								{% endif %}
+							</p>
+					</div>
+					<div class="col-lg-5 col-sm-12">
+						<p class='btn-wrap'>
+							<button type='button' class="modify">Modify</button>
+							<button type='button' class="test" data-op='{{ row.operators | json_encode() }}'>Test</button>
+							<button type='button' class="delete">Delete</button>
+
+						</p>
+						<div>
+							<p>Unit Status : </p>
+							<div>
+								<select class="form-control status" {% if row.has_history == false %}style="width:195px"{% endif %}>
+									<option value="1">Mock up</option>
+									<option value="2">Dev</option>
+									<option value="3">UAT</option>
+									<option value="4">PUBLISHED</option>
+								</select>
+								<button type="button"
+										class="export {% if row.is_deploying == true %}disabled{% endif %}" 
+										data-index='{{ loop.index }}' 
+										data-endpoint='{{ row.end_point }}' 
+										data-operators='{{ row.operators | json_encode() }}'
+										data-ready='{% if row.export_ready is defined %}{{ row.export_ready }}{% else %}false{% endif %}'
+										{% if row.has_history == false %}style="width:90px"{% endif %}
+										>Export</button>
+								{% if row.has_history != false %}
+								<button type="button" class='button-history {% if row.is_deploying == true %}disabled{% endif %}'>history</button>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class='history-data'>
+					<div class="table-responsive hide">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Deploy-id</th>
+									<th>Build Ver.</th>
+									<th>Status</th>
+									<th>Create Time</th>
+									<th>Complete Time</th>
+									<th> - </th>
+								</tr>
+							</thead>
+							<tbody class='deploy-data'>
+								
+								
+							</tbody>
+						</table>
+
+					</div>
+					<div class='no-history-data hide'>
+						no history
+					</div>
+					
+					
+				</div>
+				
+			</div>
+			{%  endfor %}
+			{% else %}
+			<div class='biz-list text-center'>
+				Not exist data
+			</div>
+			{%  endif %}
+			<button id="button_add_bunit" data-app-id="{{ user_info.selected_app_id }}" class='biz-add'>Add Biz Unit</button>
+		</div>		
+        <form id="form_biz_list" name="form_biz_list" method="post" action="/console/apps/bunit/remove">
+			<input type="hidden" name="app_id"/>
+			<input type="hidden" name="biz_id"/>
+		</form>
+		
+		<div class='hidden-layer-for-clone hide'>
+			<table id='export-history-list'>
+				<tbody>
+				<tr>
+					<td class='deploy-id'></td>
+					<td class='build-ver'></td>
+					<td class='deploy-status'></td>
+					<td class='deploy-create'></td>
+					<td class='deploy-complete'></td>
+					<td><button class="re-deploy btn btn-default">Deploy this version</button></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		
+    </section>
+
+    {% include '/console/modal/bunit-add-modal.twig' %}
+	{% include '/console/modal/bunit-test-modal.twig' %}
+	{% include '/console/modal/bunit-export-modal.twig' %}
+
+{% endblock %}
+
+{% block page_script %}
+    {% include '/console/script/bunit-script.twig' %}
+{% endblock %}

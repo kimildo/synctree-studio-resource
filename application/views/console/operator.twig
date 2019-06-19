@@ -1,0 +1,97 @@
+{% extends "layout-with-left.twig" %}
+
+{% block content %}
+    <section>
+
+        <div class="inbox-nav-bar no-content-padding">
+            <h1 class="page-title txt-color-blueDark hidden-tablet"><i class="fa fa-fw fa-terminal"></i> Operator</h1>
+            <div class="inbox-checkbox-triggered">
+                <div class="btn-group">
+                    <a href="javascript:void(0);" rel="tooltip" title="" id="button_operator_del"
+                       data-app-id="{{ user_info['selected_app_id'] }}"
+                       data-placement="bottom"
+                       data-original-title="{{ dictionary.button.remove }}"
+                       class="deletebutton btn btn-default"><strong><i class="fa fa-trash-o fa-lg"></i></strong></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="inbox-content" class="inbox-body no-content-padding">
+
+            <div class="inbox-side-bar">
+                <a href="/{{ dictionary.lang }}/console/apps/op/add" data-app-id="{{ user_info['selected_app_id'] }}"
+                   class="btn btn-primary btn-block"> <strong>{{ dictionary.button.add }}</strong> </a>
+            </div>
+
+            <div class="table-wrap custom-scroll animated fast fadeInRight" style="opacity: 1;">
+
+                <form class="smart-form" id="form_operator_list" name="form_operator_list" method="post" action="/console/apps/op/remove">
+                    <input type="hidden" name="app_id"/>
+                    <table id="inbox-table" class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <td class="inbox-table-icon">
+                                <label class="checkbox">
+                                    <input type="checkbox" id="chk_all" name="chk_all" type="checkbox" class="checkbox style-2" {% if operator is empty %}disabled="disabled"{% endif %} />
+                                    <i></i>
+                                </label>
+                            </td>
+                            <td>Name</td>
+                            {#<td>target_url</td>
+                            <td>target_method</td>#}
+                            <td>Description</td>
+                            <td>Regist Date</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if operator is not empty %}
+                            {% for row in operator %}
+                                <tr id="operator_{{ loop.index }}" class="" data-operator-id="{{ row.op_id }}">
+                                    <td class="inbox-table-icon">
+                                        <label class="checkbox">
+                                            <input name="ops[]" id="operator_chk_{{ row.op_id }}"
+                                                   type="checkbox" class="checkbox style-2"
+                                                   data-operator-id="{{ row.op_id }}"
+                                                   value="{{ row.op_id }}" />
+                                            <i></i>
+                                        </label>
+                                    </td>
+                                    <td class="inbox-data-from hidden-xs hidden-sm operator-row">
+                                        <div>{{ row.op_name }}</div>
+                                    </td>
+                                    {#<td class="inbox-data-from hidden-xs hidden-sm operator-row">
+                                        <div>{{ row.target_url }}</div>
+                                    </td>
+                                    <td class="inbox-data-from hidden-xs hidden-sm operator-row">
+                                        <div>/{{ row.target_method }}</div>
+                                    </td>#}
+                                    <td class="inbox-data-from operator-row">
+                                        <div>
+                                            {{ row.op_desc }}
+                                        </div>
+                                    </td>
+                                    <td class="inbox-data-from hidden-xs operator-row">
+                                        <div>
+                                            {{ row.regist_date }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="unread">
+                                <td colspan="6">Not exist data</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block page_script %}
+    {% include '/console/script/operator-list-script.twig' %}
+{% endblock %}

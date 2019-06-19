@@ -1,0 +1,124 @@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        const appId = '{{ app_id }}';
+        /*loadScript("{{ s3Endpoint }}/static/js/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js", initializeDuallistbox);
+
+        const initializeDuallistbox = function() {
+            let initializeDuallistbox = $('#initializeDuallistbox').bootstrapDualListbox({
+                nonSelectedListLabel: 'Operators Non-selected',
+                selectedListLabel: 'Operators Selected',
+                preserveSelectionOnMove: 'moved',
+                moveOnSelect: false,
+                showFilterInputs: false
+            });
+        };*/
+
+        $(".bunit-row").on("click", function () {
+
+            let $_parent = $(this).parent("tr");
+            let app_id = $_parent.data("app-id");
+            let biz_id = $_parent.data("biz-id");
+
+            //console.log("app_id :: " + app_id);
+            //console.log("biz_id :: " + biz_id);
+            location.href = "/{{ dictionary.lang }}/console/apps/bunit/modify/" + app_id + "/" + biz_id;
+        });
+
+
+        // 비즈옵스 등록 모달
+        $("#button_add_bunit").on("click", function () {
+            $("#modal_biz_add").modal();
+        });
+
+        // 비즈옵스 등록 액션
+        $("#button_add_biz_proceed").on("click", function () {
+
+            let $_this = $(this);
+            let $_form = $("#form_add_bunit");
+            let targetUrl = $_form.attr("action");
+            $_form.find("input[name='app_id']").val($("#button_add_bunit").data("app-id"));
+
+            if (!!$_FormCheckRequired($_form)) {
+                $.SmartMessageBox({
+                    title: "{{ dictionary['alert']['warn'] }}!",
+                    content: "{{ dictionary['alert']['add_ask'] }}",
+                    buttons: "[No][Yes]"
+                }, function (ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+                        new $_Ajax().call($_this, targetUrl, $_FormDataSerialize($_form));
+                    }
+                });
+            }
+        });
+
+        // 비즈옵스 삭제
+        $("#button_biz_del").on("click", function () {
+
+            let $_this = $(this);
+            let $_form = $("#form_biz_list");
+            let targetUrl = $_form.attr("action");
+
+            if ($(":checkbox[name='bunits[]']:checked").length < 1) {
+                showSmallBox("error_message", 3000, "{{ dictionary.alert.no_check }}");
+                return false;
+            }
+
+            $_form.find("input[name='app_id']").val($("#button_biz_del").data("app-id"));
+            let $_params = $_FormDataSerialize($_form);
+
+            $.SmartMessageBox({
+                title: "{{ dictionary['alert']['warn'] }}!",
+                content: "{{ dictionary['alert']['ask'] }}",
+                buttons: "[No][Yes]"
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+                    new $_Ajax().call($_this, targetUrl, $_params);
+                }
+            });
+        });
+
+        // 비즈옵스 등록 모달이 닫일 때
+        $("#modal_biz_add").on("hide.bs.modal", function () {
+            $(".note-error").remove();
+            $("#form_add_bunit").each(function () {
+                this.reset();
+            });
+        });
+
+        // 체크박스 전체 선택
+        $(":checkbox[name='chk_all']").on("change", function () {
+
+            let flag = $(this).is(':checked');
+            $(":checkbox[name='bunits[]']").prop('checked', flag);
+
+            switch (flag) {
+                case true :
+                    $("#inbox-table").find("tr").addClass("table-selected");
+                    break;
+                default :
+                    $("#inbox-table").find("tr").removeClass("table-selected");
+                    break;
+            }
+        });
+
+        $(":checkbox[name='bunits[]']").on("click", function () {
+            let flag = $(":checkbox[name='bunits[]']:checked").length ==  $(":checkbox[name='bunits[]']").length;
+            let $_pid = $(this).parents("tr");
+
+            $(":checkbox[name='chk_all']").prop('checked', flag);
+
+            switch ($(this).is(':checked')) {
+                case true :
+                    $_pid.addClass("table-selected");
+                    break;
+                default :
+                    $_pid.removeClass("table-selected");
+                    break;
+            }
+        });
+
+    });
+
+</script>

@@ -1,0 +1,74 @@
+/**
+    swiper
+ */
+.swiper-container {
+    
+    height: 500px;
+    margin-left: 200px;
+}
+
+.swiper-wrapper{
+    height: 99%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #ffffff;
+    border: 2px solid #C5C6CA;
+    border-radius: 8px;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    width: 60%;
+}
+
+.swiper-slide button.btn {
+    height: 40px;
+}
+
+.swiper-container .trash {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.swiper-container .trash a {
+    width: 24px;
+    height: 24px;
+}
+
+.swiper-container .trash-check {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.swiper-container .title {
+    position: absolute;
+    top: 47px;
+    font-size: 25px;
+}
+
+.swiper-container .desc {
+    position: absolute;
+    top: 200px;
+    font-size: 12px;
+}
+
+.inbox-side-bar > .btn {
+    margin-bottom: 5px;
+}

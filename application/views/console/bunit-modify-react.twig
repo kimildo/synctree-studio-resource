@@ -1,0 +1,39 @@
+{% extends "layout-with-left.twig" %}
+
+{% block header %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/htdocs/css/timeline.css">
+    <link rel="stylesheet" href="/htdocs/css/highlight/darkula.css">
+    <link rel="stylesheet" href="/htdocs/js/react/css/studio-bundle.css">
+
+{% endblock header %}
+
+{% block content %}
+    <script>
+        {% set req_var_types = constant('libraries\\constant\\CommonConst::REQUEST_VAR_TYPES') %}
+        {% set res_var_types = constant('libraries\\constant\\CommonConst::RESPONSE_VAR_TYPES') %}
+        var global_data = {
+            app_info: {{ selected_app | json_encode | raw }},
+            biz_info: {{ biz_info | json_encode | raw }},
+            dictionary: {{ dictionary | json_encode | raw }},
+            req_var_type: {{ req_var_types | json_encode | raw }},
+            res_var_type: {{ res_var_types | json_encode | raw }},
+            sample_code_types: {{ sample_code_types | json_encode | raw }},
+        };
+        {% if is_partner %}
+        global_data.partner = {
+            edit_op_id: {{ op_id }},
+            account_id: {{ account_id }},
+            team_id: {{ team_id }}
+        }
+        {% endif %}
+        console.log("global_data", global_data);
+    </script>
+    <section id="bunit-modify-wrap"></section>
+    {% include '/console/modal/bunit-test-modal.twig' %}
+{% endblock %}
+{% block page_script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script src="/htdocs/js/highlight/highlight.pack.js"></script>
+    <script src="/htdocs/js/react/studio-bundle.js"></script>
+{% endblock %}

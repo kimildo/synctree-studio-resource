@@ -1,0 +1,1258 @@
+<script src="/htdocs/js/highlight/highlight.pack.js"></script>
+<script type="text/javascript">
+
+    const appId = "{{ app_id }}";
+    const bizId = "{{ biz_id }}";
+    const accountId = "{{ account_id }}";
+    const teamId = "{{ team_id }}";
+
+    var lifelineSeq = 0;
+    var setNameTarget = null;
+    var addOpObj = null;
+    var dW = 221, w, dRR = -112, dR = -221, r;
+
+    var setLocalStorage = function (key, val) {
+        return localStorage.setItem(key, val);
+    };
+
+    var getLocalStorage = function (key) {
+        return localStorage.getItem(key);
+    };
+
+    var reDrawFlow = function () {
+        $("span.data-op").each(function () {
+            let $_this = $(this);
+            let $_parent = $_this.parents(".sec-unit");
+            $(".lifeline").each(function (_index) {
+                if ($(this).data("line-id") == $_this.data("eq-line-id")) {
+                    w = (dW * (_index + 1)) + "px";
+                    $_parent.find(".timeline-static-request > .line").css("width", w);
+                    $_parent.find(".timeline-static-response > .line").css("width", w);
+                    //r = (_index == 0) ? dRR : (dRR + (dR * (_index))) + "px";
+                    //$_parent.find(".timeline-static-request > .arrow").css("right", r);
+                }
+            });
+        });
+    };
+    function setSelectReqData($_frm){
+        var opArray = [], 
+            $_target = $_frm.find('[name="req_op_value[]"]'), 
+            prevVal = $_frm.find('[name="req_value[]"]').val(),
+            opIdxs = [],
+            reqFormData = (function () {
+                var $_reqForm = $('form[name="form_biz_prop"]'),
+                    name = typeof $('.btn_set_node_name').data("client-name") !== 'undefined' ? $('.btn_set_node_name').data("client-name") : 'client';
+                    returnData = {
+                        name : name,
+                        data : []
+                    };
+                $_reqForm.find('[name="req_key[]"]').each(function(i){
+                    returnData.data.push({
+                        index : i,
+                        key : $(this).val(),
+                    });
+                });
+                return returnData;
+            })();
+
+        $_target.closest('.req-data-frm').find('[name="req_op_value[]"]').html('');
+
+        $.each(reqFormData.data, function(i){
+            var $_opt = $('<option />'), 
+                v = 'req' + '_' + i + '_' + this.key + "_" + reqFormData.name + ' : ' + this.key;
+            $_opt.text(reqFormData.name + ' : ' + this.key);
+            $_opt.attr('value', v);
+            if(prevVal === v){
+                $_opt.prop('selected', true);
+            }
+            $_target.closest('.req-data-frm').find('[name="req_op_value[]"]').append($_opt);
+        });
+
+        $("span.data-op").each(function () {
+            data = {};
+            data.op_id = $(this).data("eq-op-id");
+            opArray.push(data);
+            opIdxs.push(data.op_id);
+        });
+
+        $_target.prop('disabled', false).parent('label').removeClass('hide');
+        $_target.closest('.req-data-frm').find('[name="req_value[]"]').prop('disabled', true).parent('label').addClass('hide');
+        
+
+        if(opIdxs.length === 0){ return false; }
+
+
+        $.ajax({
+            url: "/console/apps/op/getOperatorsByIdx",
+            type: "POST",
+            data: {app_id : appId, op_idxs : opIdxs},
+            dataType: "json",
+            beforeSend: function () {
+                
+            },
+            success: function (res) {
+                if(res.result !== 'success'){
+                    this.showErrorMessage(res);
+                    return false;
+                }
+                $.each(res.data.op, function(i){
+                    var _this = this;
+                    $.each(this.response, function(j){
+                        var $_opt = $('<option />'), 
+                            v = 'op' + '_' + i + '_' + this.res_key + '_' + _this.name + ' : ' + this.res_key;
+
+                        $_opt.text(_this.name + ' : ' + this.res_key);
+                        $_opt.attr('value', v);
+                        if(prevVal === v){
+                            $_opt.prop('selected', true);
+                        }
+                        $_target.closest('.req-data-frm').find('[name="req_op_value[]"]').append($_opt);
+                    });
+                });
+            },
+            error: function (res) {
+                this.showErrorMessage(res);
+            },
+            complete: function () {
+                
+            },
+            showErrorMessage: function (res) {
+                if (res.message != "" && res.message != undefined) {
+                    showSmallBox("error_message", 5000, res.message);
+                } else {
+                    showSmallBox("error");
+                }
+            }
+        });
+
+        
+        
+    }
+
+    $(document).ready(function () {
+
+        hljs.initHighlightingOnLoad();
+
+        reDrawFlow();
+
+        $(document).on("click", "button.btn, button.btn-no-action", function (e) {
+            e.preventDefault();
+        });
+
+        // 주소에 hash가 있으면 해당 탭으로 이동
+        if (!!location.hash) {
+            $(".nav-tabs a[href=\"" + location.hash + "\"]").tab("show");
+        } else {
+            $("#biz_tab a:first").tab("show");
+        }
+
+        // 탭 클릭시 hash 붙여줌
+        $("#biz_tab > li > a").on("click", function () {
+            location.hash = $(this).attr("href");
+            //console.log($(this).attr("href"));
+            //$("#top_page_title > li.tab-name").html($(this).attr("title"));
+        });
+
+        {# 노드 네임 변경 #}
+        $(document).on("click", ".btn_set_node_name", function (e) {
+            e.preventDefault();
+            $("#modal_biz_node_name_set").modal();
+            $("#biz_node_name").val($(this).data("client-name"));
+            setNameTarget = $(this);
+        });
+
+        $("#modal_biz_node_name_set").on("show.bs.modal", function (e) {
+
+        });
+
+        {# 노드 네임 저장 #}
+        $("#biz_save_node_name").on("click", function () {
+            if (!!$_FormCheckRequired($("#frm_set_client_name"))) {
+                let val = $("#biz_node_name").val();
+                setNameTarget.attr("data-client-name", val);
+                setNameTarget.parents(".smart-timeline-icon").find(".node-title").html(val);
+                $("#modal_biz_node_name_set").modal("hide");
+            }
+        });
+
+        {# 라이프라인 추가 #}
+        $(document).on("click", ".btn-add-life", function () {
+
+            let $_button = $(this);
+            let $_parent = $_button.parents(".smart-timeline");
+            lifelineSeq = $(".lifeline").length + 1;
+
+            let cloneElements = $("li.timeline-orgin").clone().attr({
+                "data-line-id": lifelineSeq,
+                "class": "smart-timeline lifeline"
+            });
+
+            cloneElements.appendTo("#timeline_wrapper");
+            $("#timeline_wrapper > li.smart-timeline")
+              .find(".btn-add-life").addClass("hidden").end()
+              .find(".btn-add-life").last().removeClass("hidden").end()
+              .find(".btn-remove-life").removeClass("hidden").end()
+            ;
+
+            if ($("#timeline_wrapper > li.smart-timeline").length > 1) {
+                $(".timeline-synctree").find("section.sec-unit").removeClass("hidden");
+            }
+
+            if ($("#timeline_wrapper > li.smart-timeline").length > 3) {
+                $("#timeline_wrapper > li.smart-timeline").find(".btn-add-life").last().addClass("hidden");
+            }
+
+        });
+
+        {# 라이프라인 삭제 #}
+        $(document).on("click", ".btn-remove-life", function () {
+
+            let $_parent = $(this).parents(".smart-timeline");
+            let line_id = $_parent.data("line-id");
+
+            $.SmartMessageBox({
+                title: "{{ dictionary['alert']['warn'] }}!",
+                content: "{{ dictionary['alert']['delete_ask'] }}",
+                buttons: "[No][Yes]"
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+
+                    $_parent.remove();
+
+                    $("#timeline_wrapper > li.smart-timeline")
+                      .find(".btn-add-life").addClass("hidden").end()
+                      .find(".btn-add-life").last().removeClass("hidden").end()
+                      .find(".btn-remove-life").removeClass("hidden").end()
+                    ;
+
+                    $("span.data-op").each(function (_index) {
+                        if ($(this).data("eq-line-id") == line_id) {
+                            $(this).parents(".sec-unit").remove();
+                        }
+                    });
+
+                    /*
+                    if ($("#timeline_wrapper > li.smart-timeline").length < 2) {
+                        $(".timeline-synctree").find("section.sec-unit").addClass("hidden");
+                    }
+                    */
+
+                    reDrawFlow();
+
+                }
+            });
+
+        });
+
+        {# Flow 추가 오퍼레이터 할당 #}
+        $(document).on("click", ".set-operator", function () {
+
+            let $_this = $(this);
+            let val, txt;
+            let selectedOpArray = [];
+
+            $("#duallistbox_operator_sel").html("");
+            $("span.data-op").each(function () {
+                val = $(this).data("eq-op-id");
+                txt = $(this).text();
+                selectedOpArray.push(val);
+                $("#duallistbox_operator_sel").append($("<option>").attr("value", val).text(txt));
+            });
+
+            $.ajax({
+                url: "/console/apps/op/getOperators",
+                type: "POST",
+                data: {"app_id": appId},
+                dataType: "json",
+                beforeSend: function () {
+                    addOpObj = $_this;
+                },
+                success: function (res) {
+
+                    // $("#sel_operator").html("<option value=\"\">--- select Operator ---</option>");
+                    // $(res.data.op).each(function () {
+                    //     $("#sel_operator").append($("<option>").attr("value", this.seq).text(this.name));
+                    // });
+                    //
+                    // $("#sel_flow_end").html("<option value=\"\">--- Select Lifeline ---</option>");
+                    // $("#timeline_right").find(".lifeline").each(function () {
+                    //     val = $(this).data("line-id");
+                    //     txt = $(this).find(".node-title").text();
+                    //     txt = "#" + val + " " + txt;
+                    //     $("#sel_flow_end").append($("<option>").attr("value", val).text(txt));
+                    // });
+
+                    $("#duallistbox_operator_non").html("");
+                    $(res.data.op).each(function () {
+                        val = parseInt(this.seq);
+                        txt = this.name;
+                        if ( jQuery.inArray( val, selectedOpArray ) < 0 ) {
+                            $("#duallistbox_operator_non").append($("<option>").attr("value", val).text(txt));
+                        }
+                    });
+
+                },
+                error: function (res) {
+                    this.showErrorMessage(res);
+                },
+                complete: function () {
+                    $("#modal_operator_set").modal();
+                },
+                showErrorMessage: function (res) {
+                    if (res.message != "" && res.message != undefined) {
+                        showSmallBox("error_message", 5000, res.message);
+                    } else {
+                        showSmallBox("error");
+                    }
+                }
+            });
+
+        });
+
+        {# 오퍼레이터 개별 삭제 #}
+        $(document).on("click", "a.remove-operator", function (e) {
+
+            e.preventDefault();
+
+            let $_this = $(this);
+            let $_parent = $_this.parents("section.sec-unit");
+            
+            {# 해당 오퍼레이터와 관계된 오퍼레이터가 있으면 삭제 에러처리  #}
+
+            var opJson = $(this).closest('.declare-op').find('.data-op').data('op_info'),
+                opJsonReqKeys = [],
+                index = $(this).index('a.remove-operator')
+                validate = true;
+
+            $.each(opJson.request, function(){
+                opJsonReqKeys.push(this.req_key);
+            });
+
+            $('.declare-op').each(function(i){
+                var json = $(this).find('.data-op').data('op_info');
+                if(opJson.seq !== json.seq){
+                    $.each(json.request, function(){
+                        if(this.req_var_type === "RDATA"){
+                            var splitData = this.req_value.split('_');
+
+                            if(parseInt(splitData[0]) === index && $.inArray(splitData[1], opJsonReqKeys) !== -1) {
+                                showSmallBox("error_message", 5000, '현재 `' + json.name + '` FLOW 에서 연결된 통신이 있으니 이부분을 수정하시고 다시 시도하세요.');
+                                validate = false;
+                                return false;
+                            }
+                        }
+                    });
+                }
+            });
+
+            if(!validate){ return false; }
+
+            {# 해당 오퍼레이터와 관계된 오퍼레이터가 있으면 삭제 에러처리 끝 #}
+            
+            $.SmartMessageBox({
+                title: "{{ dictionary['alert']['warn'] }}!",
+                content: "{{ dictionary['alert']['delete_ask'] }}",
+                buttons: "[No][Yes]"
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+                    let lineId = $_parent.find("span.data-op").data("eq-line-id");
+                    $_parent.remove();
+                    let dataLen = $("span[class='data-op'][data-eq-line-id="+ lineId +"]").length;
+                    if (dataLen < 1) {
+                        $("li[class*='lifeline'][data-line-id="+ lineId +"]").remove();
+                        reDrawFlow();
+                    }
+                }
+            });
+        });
+
+        let getOperatorData = function(opIdx){
+
+            let returnData = null;
+            $.ajax({
+                url: "/console/apps/op/getOperator",
+                type: "POST",
+                async: false,
+                data: {"app_id": appId, "op_id": opIdx, "account_id": accountId, "team_id": teamId},
+                dataType: "json",
+                success: function (res) {
+                    if (res.result !== "success") {
+                        this.showErrorMessage(res);
+                        return;
+                    }
+                    returnData = res.data.op;
+                },
+                error: function (res) {
+                    if (!!console) console.log("error", res);
+                    this.showErrorMessage(res);
+                },
+                complete: function (res) {
+                    $("#modal_operator_set").modal("hide");
+                },
+                showErrorMessage: function (res) {
+                    if (res.message != "" && res.message != undefined) {
+                        showSmallBox("error_message", 5000, res.message);
+                    } else {
+                        showSmallBox("error");
+                    }
+                }
+            });
+
+            return returnData;
+
+        };
+		
+
+        $(document).on("click", "a.view-operator", function (e) {
+
+            return;
+
+            e.preventDefault();
+
+            let $_this = $(this),
+				$_parent = $_this.parents("section.sec-unit"),
+                opIdx = $_parent.find('.data-op').data('eq-op-id')
+            ;
+
+            $.ajax({
+                url: "/console/ajax/getOperatorView",
+                type: "POST",
+                async: false,
+                data: {app_id: appId, biz_id: bizId, op_id: opIdx},
+                dataType: "json",
+                success: function (res) {
+
+                    if (res.result !== "success") {
+                        this.showErrorMessage(res);
+                        return;
+                    }
+
+                    $("#modal_operator_view").modal().find(".modal-body").html(res).find(".relay-data").each(function() {
+                            let vals = $(this).data("value").split("_"), write_val = vals[3];
+                            $(this).text(write_val);
+                    });
+                },
+                error: function (res) {
+                    if (!!console) console.log("error", res);
+                    this.showErrorMessage(res);
+                },
+                complete: function (res) {
+
+                },
+                showErrorMessage: function (res) {
+                    if (res.message != "" && res.message != undefined) {
+                        showSmallBox("error_message", 5000, res.message);
+                    } else {
+                        showSmallBox("error");
+                    }
+                }
+            });
+
+                //console.log("opData", opData);
+        });
+		
+		{#	modify operator	#}
+		$(document).on("click", "a.modify-operator", function () {
+		    
+            let $_this = $(this),
+				$_parent = $_this.parents("section.sec-unit"),
+                $_f = $("#form_op_add"),
+                opIdx =$_parent.find('.data-op').data('eq-op-id'),
+                opData = getOperatorData(opIdx),
+				data = $_parent.find('.data-op').data('op_info');
+
+            console.log("opData", opData);
+
+            $('#sec_op_add').data('btn-idx', $(this).index('a.modify-operator'));
+			
+			$("#modal_operator_set").modal();
+			
+			$("#frm_set_operator").hide();
+            $_f.removeClass("hidden").each(function () {
+                this.reset();
+            });
+
+            $(".data-frm-clone").remove();
+
+            $_f.find('[name="op_name"]').val(opData.name);
+            $_f.find('[name="op_method"]').each(function(){
+                $(this).prop('checked', false);
+                if ($(this).val() == opData.method) {
+                    $(this).prop("checked", true);
+                }
+            });
+			
+            $("#fieldset_request").find(".btn-req-plus").addClass("hidden").end().find(".btn-req-plus").last().removeClass("hidden").end();
+            $("#fieldset_response").find(".btn-req-plus").addClass("hidden").end().find(".btn-req-plus").last().removeClass("hidden").end();
+			
+			$_f.find('[name="modify"]').val(1);
+			
+			{# $_f.find('[name="prev-op_info"]').val(JSON.stringify(data)); #}
+			{# $_f.find('.btn-area').hide(); #}
+			
+			$_f.find('[name="op_url"]').val(opData.target_url);
+			$_f.find('[name="op_target_method"]').val(opData.target_method);
+			$_f.find('[name="op_desc"]').val(opData.desc);
+			
+			$_f.find('[name="op_api_auth_name"]').val(opData.api_auth_name);
+			$_f.find('[name="op_api_auth_key"]').val(opData.api_auth_key);
+			
+			$_f.find('[name="req_method"]').each(function(){
+				$(this).prop('checked', false);
+				if($(this).val() === opData.req_method){
+					$(this).prop('checked', true);
+				}
+			});
+
+            let rowClone;
+            let reqFieldSet = $_f.find(".req-data-frm").parents("fieldset.fieldset-input");
+
+            $.each(opData.request, function(index, d) {
+
+                rowClone = $_f.find(".req-data-frm").last().clone();
+                if (index === 0) {
+                    //$_f.find(".req-data-frm").remove();
+                }
+
+                console.log(rowClone);
+
+                rowClone.attr({
+                    "data-row-id": index + 1,
+                });
+
+                if (index > 0) {
+                    rowClone.find('.label').remove();
+                }
+
+                rowClone.find('[name="req_param_id[]"]').val(d.param_id);
+                rowClone.find('[name="req_key[]"]').val(d.req_key);
+                rowClone.find('[name="req_var_type[]"]').val(d.req_var_type);
+                rowClone.find('[name="req_value[]"]').val(d.req_value);
+                rowClone.find('[name="req_desc[]"]').val(d.req_desc);
+
+                rowClone.appendTo(reqFieldSet);
+
+            });
+
+            $_f.find(".req-data-frm").first().remove();
+
+            let resFieldSet = $_f.find(".res-data-frm").parents("fieldset.fieldset-input");
+            $.each(opData.response, function(index, d) {
+
+                rowClone = $_f.find(".res-data-frm").last().clone();
+                rowClone.attr({
+                    "data-row-id": index + 1,
+                });
+
+                if (index > 0) {
+                    rowClone.find('.label').remove();
+                }
+
+                rowClone.find('[name="res_param_id[]"]').val(d.param_id);
+                rowClone.find('[name="res_key[]"]').val(d.res_key);
+                rowClone.find('[name="res_var_type[]"]').val(d.res_var_type);
+                rowClone.find('[name="res_value[]"]').val(d.res_value);
+                rowClone.find('[name="res_desc[]"]').val(d.res_desc);
+
+                rowClone.appendTo(resFieldSet);
+
+            });
+
+            $_f.find(".res-data-frm").first().remove();
+            resFieldSet.find("button.btn-req-plus").addClass("hidden").last().removeClass("hidden");
+            resFieldSet.find("button.btn-req-minus").removeClass("hidden").first().addClass("hidden");
+
+            /*$_f.find(".req-data-frm").each(function(index) {
+
+                let d = opData.request[index];
+                $(this).find('[name="req_param_id[]"]').val(d.param_id);
+				$(this).find('[name="req_key[]"]').val(d.req_key);
+				$(this).find('[name="req_var_type[]"]').val(d.req_var_type).trigger('change');
+				$(this).find('[name="req_value[]"]').val(d.req_value);
+				$(this).find('[name="req_desc[]"]').val(d.req_desc);
+
+                if (d.req_var_type === "RDATA") {
+                    setSelectReqData($(this));
+                }
+			});
+
+			$_f.find('.res-data-frm').each(function(index){
+				var d = opData.response[index];
+                $(this).find('[name="res_param_id[]"]').val(d.param_id);
+				$(this).find('[name="res_key[]"]').val(d.res_key);
+				$(this).find('[name="res_var_type[]"]').val(d.res_var_type).trigger('change');
+				
+				// 파트너사가 해당 데이터를 업데이트한 경우
+                if ($(this).find("[name=\"res_value[]\"]").length === 0 && typeof d.res_value !== "undefined") {
+                    var h = "<div class=\"col col-2\"><label class=\"label\"><span class=\"text-danger\">*</span> Value</label><label class=\"input\"><input type=\"text\" name=\"res_value[]\" maxlength=\"100\" autocomplete=\"off\" placeholder=\"Value\" value=\"" +
+                        d.res_value + "\" required=\"required\" readonly /></label></div>";
+                    $(h).insertBefore($(this).find(".res-desc"));
+                    $(this).find(".res-desc").removeClass("col-6").addClass("col-4");
+                } else if ($(this).find("[name=\"res_value[]\"]").length > 0) {
+                    $(this).find("[name=\"res_value[]\"]").val(d.res_value);
+                }
+				if($(this).find('[name="res_value[]"]').length > 0){
+					$(this).find('[name="res_value[]"]').val(d.res_value);
+				}
+				$(this).find('[name="res_desc[]"]').val(d.res_desc);
+			});*/
+			
+			{#		relay	#}
+			$("#modal_operator_set").find('[name="req_var_type[]"]').each(function(){
+				$(this).off('change').on('change', function(e){
+                    let $_f = $(this).closest(".req-data-frm");
+                    if (this.value === "RDATA") {
+                        setSelectReqData($_f);
+                    } else {
+                        $_f.find("[name=\"req_value[]\"]").prop("disabled", false).parent("label").removeClass("hide");
+                        $_f.find("[name=\"req_op_value[]\"]").prop("disabled", true).parent("label").addClass("hide");
+                    }
+				});
+			});
+        });
+		
+
+        $("#modal_operator_set").on("show.bs.modal", function () {
+            $("#frm_set_operator").show();
+            $("#form_op_add").addClass("hidden");
+            $("#sel_operator").val("");
+			
+        }).on("hide.bs.modal", function () {
+			$("#form_op_add").find('[name="modify"]').val(0);
+		});
+
+        {# 모달창의 오퍼레이터 적용 버튼 #}
+        $("#btn_add_op").on("click", function () {
+
+            let $_form = $("#frm_set_operator");
+            let val, txt, ep, lineIdx;
+            let $_parent, $_clone;
+            let data_op_idx = $(".data-op").length + 1;
+            let cloneElements, addTimeline = true;
+            let targetLineId;
+			
+			let $_f = $('#form_op_add');
+			let modify = parseInt($_f.find('[name=modify]').val());
+
+            if (modify === 1) {
+
+				let prevOpJson = JSON.parse($_f.find('[name="prev-op_info"]').val());
+				prevOpJson.name = $_f.find('#op_name').val();
+				prevOpJson.desc = $_f.find('#op_desc').val();
+				prevOpJson.method = $_f.find('[name="op_method"]').val();
+				prevOpJson.target_url = $_f.find('#op_url').val();
+				prevOpJson.target_method = $_f.find('#op_target_method').val();
+				prevOpJson.req_method = $_f.find('[name="req_method"]').val();
+				prevOpJson.api_auth_name = $_f.find('[name="op_api_auth_name"]').val();
+				prevOpJson.api_auth_key = $_f.find('[name="op_api_auth_key"]').val();
+
+                let req = [], res = [];
+
+				$_f.find('.req-data-frm').each(function(){
+					let type = $(this).find('[name="req_var_type[]"]').val(),
+						val = type === 'RDATA' ? $(this).find('[name="req_op_value[]"]').val() : $(this).find('[name="req_value[]"]').val();
+						$(this).find('[name="req_op_value[]"]').closest('label.select').addClass('hide').siblings('label.input').removeClass('hide');
+
+					req.push({
+						req_key : $(this).find('[name="req_key[]"]').val(),
+						req_var_type : type,
+						req_value : val,
+						req_desc : $(this).find('[name="req_desc[]"]').val()
+					});
+				});
+				$_f.find('.res-data-frm').each(function(){
+                    let tmp = {
+						res_key : $(this).find('[name="res_key[]"]').val(),
+						res_var_type : $(this).find('[name="res_var_type[]"]').val(),
+						res_desc : $(this).find('[name="res_desc[]"]').val()
+					};
+					if($(this).find('[name="res_value[]"]').length > 0){
+						tmp.res_value = $(this).find('[name="res_value[]"]').val();
+					}
+					res.push(tmp);
+				});
+
+				prevOpJson.request = req;
+				prevOpJson.response = res;
+				$('span.data-op').each(function(){
+					if($(this).data('eq-op-id') === parseInt(prevOpJson.seq)){
+						$(this).data('op_info', prevOpJson);
+						$_f.find('[name="prev-op_info"]').val('');
+						$_f.find('[name=modify]').val(0);
+						$_f.find('.btn-area').show();
+						
+						$_f.removeClass("hidden").each(function () {
+							this.reset();
+						});
+
+						$(".data-frm-clone").remove();
+						$("#modal_operator_set").modal("hide");
+						return false;
+					}
+					
+				});
+				return false;
+			}
+
+            if (!!$_FormCheckRequired($_form)) {
+
+                $(".lifeline").remove();
+                $(".declare-op").remove();
+
+                let bindArray = [], unbindArray = [], data;
+                $("#duallistbox_operator_sel option").each(function (_index) {
+                    data = {};
+                    data.op_id = parseInt(this.value);
+                    data.op_seq = _index;
+                    bindArray.push(data);
+                });
+
+                $("#duallistbox_operator_non option").each(function (_index) {
+                    data = {};
+                    data.op_id = parseInt(this.value);
+                    data.op_seq = _index;
+                    unbindArray.push(data);
+                });
+
+                $.ajax({
+                    url: "/console/apps/op/setOperatorBind",
+                    type: "POST",
+                    async: false,
+                    data: {"app_id": appId, "biz_id": bizId, "bind": bindArray, "unbind": unbindArray},
+                    dataType: "json",
+                    success: function (res) {
+
+                        if (res.result !== "success") {
+                            this.showErrorMessage(res);
+                            return;
+                        }
+
+                        if (!res.data.op) {
+                            return;
+                        }
+
+                        $.each(res.data.op, function(index, value) {
+
+                            txt = this.name;
+                            val = parseInt(this.seq);
+
+                            // timeline
+                            $_parent = addOpObj.parents(".smart-timeline");
+
+                            $(".lifeline").each(function() {
+                                if ($(this).find("span.node-title").attr("title") === this.target_url) {
+                                    //lifelineSeq = $(this).data("line-id");
+                                    targetLineId = $(this).data("line-id");
+                                    addTimeline = false;
+                                    return false;
+                                }
+                            });
+
+                            if (addTimeline === true) {
+
+                                lifelineSeq = (!!($(".lifeline").last().data("line-id")))
+                                    ? parseInt($(".lifeline").last().data("line-id")) + 1
+                                    : lifelineSeq + 1;
+
+                                targetLineId = lifelineSeq;
+
+                                cloneElements = $("li.timeline-orgin").clone().attr({
+                                    "data-line-id": lifelineSeq,
+                                    "class": "smart-timeline lifeline",
+                                });
+
+                                cloneElements.appendTo("#timeline_wrapper").
+                                    find("button.dropdown-toggle").
+                                    attr({
+                                        "rel": "tooltip",
+                                        "data-placement": "top",
+                                        "data-original-title": this.target_url,
+                                    }).
+                                    end().
+                                    find("span.node-title-text")
+                                    //.attr("title", res.data.op.target_url)
+                                    //.text(res.data.op.target_method)
+                                    .text("")
+                                ;
+
+                                //rel="tooltip" data-placement="top" data-original-title="Tooltip Top"
+
+                                $("#timeline_wrapper > li.smart-timeline").
+                                    find(".btn-add-life").addClass("hidden").end()
+                                //.find(".btn-add-life").last().removeClass("hidden").end()
+                                    .find(".btn-remove-life").addClass("hidden").end()
+                                ;
+
+                                if ($("#timeline_wrapper > li.smart-timeline").length > 1) {
+                                    $(".timeline-synctree").find("section.sec-unit").removeClass("hidden");
+                                }
+
+                                if ($("#timeline_wrapper > li.smart-timeline").length > 3) {
+                                    $("#timeline_wrapper > li.smart-timeline").find(".btn-add-life").
+                                        last().addClass("hidden");
+                                }
+                            }
+
+                            // flow
+                            $_parent = addOpObj.parent(".sec-unit");
+                            $_clone = $_parent.clone();
+                            $($_clone).insertAfter($_parent);
+
+                            let newOp = document.createElement("span");
+                            $(newOp).
+                                data("eq-index", data_op_idx).
+                                data("eq-op-id", val).
+                                data("eq-line-id", targetLineId).
+                                data("op_info", value).
+                                addClass("data-op").
+                                text(txt)
+                            ;
+
+                            $_parent.attr("class", "sec-unit declare-op").
+                                find("button").
+                                removeClass("set-operator").
+                                removeClass("btn-sm").
+                                addClass("btn-declare-op").
+                                addClass("btn-warning").
+                                addClass("dropdown-toggle").
+                                attr("data-toggle", "dropdown").
+                                html(newOp).
+                                append(" <span class=\"caret\"></span>")
+                            {#.html("<span class='data-op' data-eq-index='"+ data_op_idx +"' data-eq-op-id='" + val + "' data-eq-line-id='" + targetLineId + "'>" + txt + " </span> <span class=\"caret\"></span>")#}
+                            ;
+
+                            let eOpButton = $_parent.find("a.edit-operator");
+                            let modifyUrl = eOpButton.attr("href");
+
+                            eOpButton.attr("href", modifyUrl + val);
+
+                            $("body").tooltip({
+                                selector: "[rel=tooltip]",
+                            });
+
+                            addOpObj = $(".set-operator");
+                            $_parent.find(".flow-arrow").removeClass("hidden");
+
+                        });
+
+                        //$("#modal_operator_set").modal("hide");
+                        reDrawFlow();
+
+                    },
+                    complete: function (res) {
+                        //$("#modal_operator_set").modal("hide");
+                    },
+                    error: function (res) {
+                        if (!!console) console.log("error", res);
+                        this.showErrorMessage(res);
+                    },
+                    showErrorMessage: function (res) {
+                        if (res.message != "" && res.message != undefined) {
+                            showSmallBox("error_message", 5000, res.message);
+                        } else {
+                            showSmallBox("error");
+                        }
+                    }
+                });
+            }
+
+        });
+
+        $("#btn_save_add_op").on("click", function () {
+
+        });
+
+        $("#btn_show_add_op").on("click", function () {
+			
+			var idx = $('span.data-op').length;
+			
+			$('#sec_op_add').data('btn-idx', idx);
+			
+			$("#modal_operator_set").modal().find('.modal-footer').hide();
+
+            $("#form_op_add").find('.btn-area').show();
+            $("#form_op_add").find('.res-data-frm').each(function(){
+                if($(this).has('[name="res_value[]"]').length){
+                    $(this).find('[name="res_value[]"]').closest('.col-2').remove();
+                    $(this).find('.res-desc').removeClass('col-4').addClass('col-6');
+                }
+            });
+			
+			$('#sec_op_add').find('[name="req_var_type[]"]:eq(0)').off('change').on('change', function(e){
+                var $_f = $(this).closest('.req-data-frm');
+                if(this.value === 'RDATA'){
+                    setSelectReqData($_f);
+                }else{
+                    $_f.find('[name="req_value[]"]').prop('disabled', false).parent('label').removeClass('hide');
+                    $_f.find('[name="req_op_value[]"]').prop('disabled', true).parent('label').addClass('hide');
+                }
+            });
+
+            $("#frm_set_operator").hide();
+            $("#form_op_add").removeClass("hidden").each(function () {
+                this.reset();
+            });
+			{#$('#sec_op_add').data('btn-idx', $(this).index());#}
+
+            $("#form_op_add").find(".data-frm-clone").remove();
+            $("#form_op_add").find("#fieldset_request").find(".btn-req-plus")
+            .addClass("hidden").end().find(".btn-req-plus").last()
+            .removeClass("hidden").end();
+
+            $("#form_op_add").find('.req-data-frm:eq(0)').find(".btn-req-plus")
+            .removeClass("hidden");
+
+
+            $("#form_op_add").find("#fieldset_response").find(".btn-req-plus")
+            .addClass("hidden").end().find(".btn-req-plus").last()
+            .removeClass("hidden").end();
+
+            $("#form_op_add").find('.res-data-frm:eq(0)').find(".btn-req-plus")
+            .removeClass("hidden");
+
+        });
+
+        $("#button_close_save_operator").on("click", function () {
+
+            {% if (is_partner is defined) %}
+            $("#modal_operator_set").modal("hide");
+            {% else %}
+            $("#frm_set_operator").show();
+            $("#form_op_add").addClass("hidden");
+            $("#modal_operator_set").find('.modal-footer').show();
+            {% endif %}
+
+        });
+
+        {# 클라이언트 리퀘스트 셋 #}
+        $('a.set-client').on('click', function(e) {
+            e.preventDefault();
+            $('#modal_biz_basic_set').modal();
+        });
+
+        {# 클라이언트 리퀘스트 저장 #}
+        $("#btn_set_basic").on("click", function () {
+            let $_form = $("#form_biz_prop");
+            $_form.find("input[name='req_value[]']").removeAttr("required");
+            if (!!$_FormCheckRequired($_form)) {
+                $(".set-client").addClass("btn-warning");
+                $("#modal_biz_basic_set").modal("hide");
+            }
+        });
+
+        {# 비즈 유닛 저장 #}
+        $(".btn-save-bunit").on("click", function () {
+			
+            let $_this = $(this);
+            let targetUrl = "/console/apps/bunit/modifyCallback";
+
+			{% if(is_partner is defined) %}
+			targetUrl = "/partner/bunitDataAddCallback"; 
+			{% endif %}
+
+            let option = {
+                "after_move_type": "reload",
+                "after_move_url": "",
+                "after_unload_release": "true"
+            };
+
+            let opArray = [];
+            let lineArray = [];
+            let formArray = [];
+            let submitData, data;
+            let $_form = $("#form_biz_prop");
+
+            if (!$_FormCheckRequired($_form)) {
+                $("#modal_biz_basic_set").modal();
+                return;
+            }
+
+            $.SmartMessageBox({
+                title: "{{ dictionary['alert']['warn'] }}!",
+                content: "{{ dictionary['alert']['modify_ask'] }}",
+                buttons: "[No][Yes]"
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+
+                    $("span.data-op").each(function () {
+                        data = {};
+                        data.op_id = $(this).data("eq-op-id");
+                        data.op_text = $.trim($(this).text());
+                        data.target_line_id = $(this).data("eq-line-id");
+						data.op_info = $(this).data("op_info");
+                        opArray.push(data);
+                    });
+
+                    $(".lifeline").each(function (_index) {
+                        data = {};
+                        data.line_idx = _index;
+                        data.line_id = $(this).data("line-id");
+                        data.line_title = $.trim($(this).find(".node-title-text").text());
+                        data.line_end_point = $(this).find("button.btn-top").data("original-title");
+                        lineArray.push(data);
+                    });
+
+                    $_form.find("section.req-data-frm").each(function () {
+                        data = {};
+                        $(this).find("input, select").each(function () {
+                            data[$(this).attr("name").replace("[]", "")] = $(this).val();
+                        });
+                        formArray.push(data);
+                    });
+
+                    submitData = {
+                        "app_id": appId,
+                        "biz_id": bizId,
+                        "biz_name": $("#biz_name").val(),
+                        "biz_desc": $("#biz_desc").val(),
+                        "req_method": $("input[name=\"req_method\"]:checked").val(),
+                        "form_data": formArray,
+                        "client_title": $("#div_set_client_name").find(".node-title").text(),
+                        "operators": opArray,
+                        "lines": lineArray
+                    };
+					
+                    setLocalStorage("biz_" + appId + "_" + bizId, JSON.stringify(submitData));
+                    new $_Ajax().call($_this, targetUrl, submitData, "POST", option);
+
+                    //submitData = JSON.stringify(submitData) ;
+                    //console.log("submitData :: " + submitData);
+                    //JSON.parse(submitData));
+
+                } //end of if
+            });
+
+        });
+        {# 비즈 유닛 저장 끝 #}
+		
+        {# 비즈 유닛 테스트 #}
+        $(".btn-test-bunit").on("click", function () {
+
+            let $_this = $(this);
+            let targetUrl = "/console/apps/bunit/test";
+            let submitData, data;
+
+            let $_form = $("#form_biz_prop");
+            if (!$_FormCheckRequired($_form)) {
+                $("#modal_biz_basic_set").modal();
+                return;
+            }
+
+            let opArray = [];
+
+            if ($("span.data-op").length < 1) {
+                $(".set-operator").trigger("click");
+                return;
+            }
+
+            $.SmartMessageBox({
+                title: "{{ dictionary['alert']['noti'] }}!",
+                content: "{{ dictionary['alert']['test_ask'] }}",
+                buttons: "[No][Yes]"
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+
+                    submitData = {
+                        "app_id": appId,
+                        "biz_id": bizId,
+                    };
+                    testBizUnit($_this, targetUrl, submitData);
+                } //end of if
+            });
+        });
+        {# 비즈 유닛 끝 #}
+
+        {# 오퍼레이션 추가 #}
+        $(".btn-select-multi").on("click", function () {
+
+            let selectedBindArray = [];
+            let selectedBindData = {};
+            $("#duallistbox_operator_non option:selected").each(function () {
+                selectedBindData.op_id = this.value;
+                selectedBindData.op_seq = $("#duallistbox_operator_sel option").size() + 1;
+                selectedBindArray.push(selectedBindData);
+            });
+
+            if (!!console) console.log(selectedBindArray);
+            setBindOperation(selectedBindArray, "bind", function() {
+                $("#duallistbox_operator_non option:selected").each(function () {
+                    $("#duallistbox_operator_sel").append($("<option>").attr("value", this.value).text(this.text));
+                    $(this).remove();
+                });
+            });
+
+        });
+
+        {# 오퍼레이션 모두 추가 #}
+        $(".btn-select-all").on("click", function () {
+
+            let selectedBindArray = [], selectedBindData;
+            $("#duallistbox_operator_non option").each(function () {
+                selectedBindData = {};
+                selectedBindData.op_id = this.value;
+                selectedBindData.op_seq = selectedBindArray.length + 1;
+                selectedBindArray.push(selectedBindData);
+            });
+
+            setBindOperation(selectedBindArray, "bind", function() {
+                $("#duallistbox_operator_non option").each(function () {
+                    $("#duallistbox_operator_sel").append($("<option>").attr("value", this.value).text(this.text));
+                    $(this).remove();
+                });
+            });
+        });
+
+        {# 오퍼레이션 제거 #}
+        $(".btn-relese-multi").on("click", function () {
+
+            let selectedBindArray = [];
+            let selectedBindData = {};
+
+            $("#duallistbox_operator_sel option").each(function (_index) {
+                if (true === $(this).prop("selected")) {
+                    selectedBindData.op_id = this.value;
+                    selectedBindData.op_seq = _index + 1;
+                    selectedBindArray.push(selectedBindData);
+                }
+            });
+
+            if (!!console) console.log(selectedBindArray);
+            setBindOperation(selectedBindArray, 'unbind', function() {
+                $("#duallistbox_operator_sel option").each(function () {
+                    if (true === $(this).prop("selected")) {
+                        $("#duallistbox_operator_non").append($("<option>").attr("value", this.value).text(this.text));
+                        $(this).remove();
+                    }
+                });
+            });
+        });
+
+        {# 오퍼레이션 모두 제거 #}
+        $(".btn-relese-all").on("click", function () {
+            let selectedBindArray = [], selectedBindData;
+            $("#duallistbox_operator_sel option").each(function () {
+                selectedBindData = {};
+                selectedBindData.op_id = this.value;
+                selectedBindData.op_seq = $(this).prevAll().size() + 1;
+                selectedBindArray.push(selectedBindData);
+            });
+
+            if (!!console) console.log(selectedBindArray);
+            setBindOperation(selectedBindArray, 'unbind', function() {
+                $("#duallistbox_operator_sel option").each(function (_index) {
+                    $("#duallistbox_operator_non").append($("<option>").attr("value", this.value).text(this.text));
+                    $(this).remove();
+                });
+            });
+        });
+
+        let setBindOperation = function(opsArr, type, callBackFunction) {
+
+            let url = "/console/apps/op/";
+            url += (type == 'unbind') ? "unbindOperation" : "bindOperation";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                async: false,
+                data: {"app_id": appId, "biz_id": bizId, "bind": opsArr},
+                dataType: "json",
+                success: function (res) {
+                    if (res.result !== "success") {
+                        this.showErrorMessage(res);
+                        return;
+                    }
+
+                    if (callBackFunction != null) callBackFunction();
+                    $("#btn_add_op").trigger("click");
+                },
+                error: function (res) {
+                    if (!!console) console.log("error", res);
+                    this.showErrorMessage(res);
+                },
+                complete: function (res) {
+
+                },
+                showErrorMessage: function (res) {
+                    if (res.message != "" && res.message != undefined) {
+                        showSmallBox("error_message", 5000, res.message);
+                    } else {
+                        showSmallBox("error");
+                    }
+                }
+            });
+
+
+
+        };
+
+        var clipboard = new ClipboardJS('.copy-btn');
+
+        clipboard.on('success', function(e) {
+            //console.info('Action:', e.action);
+            //console.info('Text:', e.text);
+            //console.info('Trigger:', e.trigger);
+            showSmallBox('success_message', 3000, 'Copied!! - ' + e.text);
+            e.clearSelection();
+        });
+
+        clipboard.on('error', function(e) {
+            console.error('Action:', e.action);
+            console.error('Trigger:', e.trigger);
+        });
+
+        // 샘플 소스보기 버튼
+        $(".view-source-btn").on("click", function () {
+            $("#modal_sample_source").modal();
+        });
+
+        $("a.set-sample-language").on("click", function () {
+
+            let $_this = $(this);
+            let $_button = $("#button_sample_code");
+            let targetUrl = '/console/apps/bunit/getSampleCodes';
+            let submitData = {
+                "app_id": appId,
+                "biz_id": bizId,
+                "snipet": $_this.data("snippet")
+            };
+
+            new $_Ajax().call(null, targetUrl, submitData, "POST", {
+                    "after_move_type": "",
+                    "after_move_url": "",
+                    "after_unload_release": ""
+                }, null,
+                function (res) {
+
+                    if (res.result === "session_expired") {
+                        showSmallBox("error_message", 1000, res.data.message);
+                        readyState = null;
+                        location.href = "/";
+                        return;
+                    }
+
+                    if (res.result !== "success") {
+                        showSmallBox("error_message", 3000, res.data.message);
+                        $_button.button("reset");
+                        return;
+                    }
+
+                    $("#biz_sample_source_code").html(res.data.code);
+
+                    $("pre code").each(function (i, block) {
+                        $(this).removeClass().addClass(res.data.type);
+                        hljs.highlightBlock(block);
+                    });
+
+                    showSmallBox("success_landing");
+                    $_button.html($_this.text());
+                }
+            ); // end of ajax call
+
+
+
+        });
+
+    });  // end of document.ready
+
+</script>

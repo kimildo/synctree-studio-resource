@@ -1,0 +1,148 @@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        {% if flash_message['show_app_add'][0] is not empty %}
+        $("#modal_app_add").modal();
+        {% endif %}
+
+        var swiper = new Swiper('.swiper-container', {
+            effect: 'coverflow',
+            grabCursor: true,
+            slidesPerView: 3,
+            spaceBetween: 30,
+            centeredSlides: true,
+            loop: false,
+            coverflowEffect: {
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows : false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            }, on: {
+				init: function () {
+					$('.swiper-container').css('visibility', 'visible');
+				}
+			}
+        });
+
+        // 앱 등록 모달
+        $(".button-add-app").on("click", function () {
+            $("#modal_app_add").modal();
+        });
+		
+		// 앱 등록 액션
+        $("#button_add_app_proceed").on("click", function () {
+
+            let $_this = $(this);
+            let $_form = $("#form_add_app");
+            let targetUrl = $_form.attr("action");
+
+            if (!!$_FormCheckRequired($_form)) {
+                $.SmartMessageBox({
+                    title: "{{ dictionary['alert']['warn'] }}!",
+                    content: "{{ dictionary['alert']['add_ask'] }}",
+                    buttons: "[No][Yes]"
+                }, function (ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+                        new $_Ajax().call($_this, targetUrl, $_FormDataSerialize($_form));
+                    }
+                });
+            }
+        });
+
+
+        // 앱 개별 삭제
+        //button-app-delete
+        {#$(".button-app-delete").on("click", function () {#}
+
+            {#let $_this = $(this);#}
+            {#let targetUrl = "/console/apps/remove/" + $_this.data("app-id");#}
+            {#$.SmartMessageBox({#}
+                {#title: "{{ dictionary['alert']['warn'] }}!",#}
+                {#content: "{{ dictionary['alert']['ask'] }}",#}
+                {#buttons: "[No][Yes]"#}
+            {#}, function (ButtonPressed) {#}
+                {#if (ButtonPressed === "Yes") {#}
+                    {#new $_Ajax().call($_this, targetUrl);#}
+                {#}#}
+            {#});#}
+
+        {#});#}
+
+        // 앱 삭제
+        $("#button_app_del").on("click", function () {
+
+            let $_this = $(this);
+            let $_form = $("#form_apps_list");
+            let targetUrl = $_form.attr("action");
+
+            if ($(":checkbox[name='apps[]']:checked").length < 1) {
+                showSmallBox("error_message", 3000, "{{ dictionary.alert.no_check }}");
+                return false;
+            }
+
+            let $_params = $_FormDataSerialize($_form);
+
+            $.SmartMessageBox({
+                title: "{{ dictionary['alert']['warn'] }}!",
+                content: "{{ dictionary['alert']['ask'] }}",
+                buttons: "[No][Yes]"
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+                    new $_Ajax().call($_this, targetUrl, $_params);
+                }
+            });
+        });
+
+        // 앱 등록 모달이 닫일 때
+        $("#modal_app_add").on("hide.bs.modal", function () {
+            $(".note-error").remove();
+            $("#form_add_app").each(function () {
+                this.reset();
+            });
+        });
+
+        // 체크박스 전체 선택
+        $(":checkbox[name='chk_all']").on("change", function () {
+
+            let flag = $(this).is(':checked');
+            $(":checkbox[name='apps[]']").prop('checked', flag);
+
+            switch (flag) {
+                case true :
+                    $("#inbox-table").find("tr").addClass("table-selected");
+                    break;
+                default :
+                    $("#inbox-table").find("tr").removeClass("table-selected");
+                    break;
+            }
+        });
+
+        // $(":checkbox[name='apps[]']").on("click", function () {
+        //     let flag = $(":checkbox[name='apps[]']:checked").length ==  $(":checkbox[name='apps[]']").length;
+        //     let $_pid = $(this).parents("tr");
+        //
+        //     $(":checkbox[name='chk_all']").prop('checked', flag);
+        //
+        //     switch ($(this).is(':checked')) {
+        //         case true :
+        //             $_pid.addClass("table-selected");
+        //             break;
+        //         default :
+        //             $_pid.removeClass("table-selected");
+        //             break;
+        //     }
+        // });
+
+    });
+
+</script>

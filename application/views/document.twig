@@ -1,0 +1,102 @@
+{% set htmlId = (extr_page is defined) ? "id=extr-page" : '' %}
+{% set s3Endpoint =  constant('libraries\\constant\\CommonConst::AWS_S3_END_POINT') %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+    <title> Document - {{ page_desc }} </title>
+    <meta name="description" content="{{ page_desc }}">
+    <meta name="author" content="ntuple">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- meta tags for share -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Synctree Studio V2.0 Document">
+    <meta property="og:title" content="Document - {{ page_desc }} ">
+    <meta property="og:description" content="{{ page_desc }}">
+    <meta property="og:url" content="{{ share_url }}">
+    <meta property="og:image" content="{{ share_image }}">
+    <meta property="og:image:alt" content="{{ page_desc }}" />
+
+    <!-- FAVICONS -->
+    <link rel="shortcut icon" href="/htdocs/img/favicon_synctree_16.png" type="image/x-icon">
+    <link rel="icon" href="/htdocs/img/favicon_synctree_16.png" type="image/x-icon">
+
+    <!-- GOOGLE FONT -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    <!-- Specifying a Webpage Icon for Web Clip
+         Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    {#<link rel="apple-touch-icon" href="{{ s3Endpoint }}/static/img/splash/sptouch-icon-iphone.png">#}
+    {#<link rel="apple-touch-icon" sizes="76x76" href="{{ s3Endpoint }}/static/img/splash/touch-icon-ipad.png">#}
+    {#<link rel="apple-touch-icon" sizes="120x120" href="{{ s3Endpoint }}/static/img/splash/touch-icon-iphone-retina.png">#}
+    {#<link rel="apple-touch-icon" sizes="152x152" href="{{ s3Endpoint }}/static/img/splash/touch-icon-ipad-retina.png">#}
+
+    <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    {#<link rel="apple-touch-startup-image" href="{{ s3Endpoint }}/static/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">#}
+    {#<link rel="apple-touch-startup-image" href="{{ s3Endpoint }}/static/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">#}
+    {#<link rel="apple-touch-startup-image" href="{{ s3Endpoint }}/static/img/splash/iphone.png" media="screen and (max-device-width: 320px)">#}
+
+
+    <link
+            rel="stylesheet"
+            href="//fonts.googleapis.com/earlyaccess/nanumgothic.css"
+    />
+
+    {#<link#}
+            {#rel="stylesheet"#}
+            {#href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"#}
+            {#integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"#}
+            {#crossorigin="anonymous"#}
+    {#/>#}
+    <link rel="stylesheet" type="text/css" media="screen" href="/htdocs/css/font-awesome.min.css" />
+    <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/androidstudio.min.css"
+    />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/htdocs/css/smartadmin-production-plugins.min.css" />
+
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" media="screen" href="/htdocs/css/document.css?v={{ CSS_UPDATED }}" />
+</head>
+<body class="smart-style-2 ">
+<div id="document" class="wrap"></div>
+</body>
+<script src="{{ s3Endpoint }}/static/js/libs/jquery-2.1.1.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/libs/jquery-ui-1.10.3.min.js"></script>
+<script src="{{ s3Endpoint }}/static/js/plugin/pace/pace.min.js"></script>
+<script>
+    paceOptions = {
+        restartOnPushState: false
+    };
+    var global_data = {
+        dictionary: {{ dictionary | json_encode | raw }},
+        app_id: {{ app_id }},
+        biz_id: {{ biz_id }},
+    };
+</script>
+<script src="/htdocs/js/app.config.js?v={{ SCRIPT_UPDATED }}"></script>
+
+<!-- CUSTOM NOTIFICATION -->
+<script src="{{ s3Endpoint }}/static/js/notification/SmartNotification.min.js"></script>
+
+<!-- JARVIS WIDGETS -->
+<script src="{{ s3Endpoint }}/static/js/smartwidgets/jarvis.widget.min.js"></script>
+<!--[if IE 8]>
+<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+<![endif]-->
+
+
+<script src="/htdocs/js/react/studio-bundle.js?v={{ SCRIPT_UPDATED }}"></script>
+{% include '/analytics/analyticstracking.twig' %}
+</html>

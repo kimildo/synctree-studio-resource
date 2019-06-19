@@ -1,0 +1,40 @@
+{# request copy form #}
+{% set var_types = constant('libraries\\constant\\CommonConst::RESPONSE_VAR_TYPES') %}
+<section data-row-id="1" class="response-data-frm-template hidden">
+    <div class="row">
+
+        <div class="col col-2">
+            <label class="input">
+                <input type="text" class="required" name="res_key[]" maxlength="100" autocomplete="off" placeholder="Key" />
+            </label>
+        </div>
+
+        <div class="col col-2">
+            <label class="select">
+                <select class="required" name="res_var_type[]" required="required">
+                    {% for type, type_text in var_types %}
+                    <option value="{{ type }}">{{ type_text }}</option>
+                    {% endfor %}
+                </select> <i></i>
+            </label>
+        </div>
+
+        <div class="col col-6" style="padding-right: 0">
+            <label class="input">
+                <input type="text" name="res_desc[]" maxlength="100" autocomplete="off" placeholder="Description" />
+            </label>
+        </div>
+
+        <div class="col col-2" style="padding-right: 0">
+            <button class="btn btn-default btn-circle btn-req-plus"
+                    data-clone-class="response-data-frm-template"
+                    data-parent-fieldset="fieldset_response"
+                    data-class = "res-data-frm"><i class="glyphicon glyphicon-plus"></i></button>
+            <button class="btn btn-default txt-color-red btn-circle btn-req-minus"
+                    data-clone-class="response-data-frm-template"
+                    data-parent-fieldset="fieldset_response"
+                    data-class = "res-data-frm"><i class="glyphicon glyphicon-minus"></i></button>
+        </div>
+    </div>
+</section>
+{# request copy form #}

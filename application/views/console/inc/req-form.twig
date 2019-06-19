@@ -1,0 +1,47 @@
+{# request copy form #}
+{% set var_types = constant('libraries\\constant\\CommonConst::REQUEST_VAR_TYPES')  %}
+<section data-row-id="1" class="request-data-frm-template hidden">
+    <div class="row">
+
+        <div class="col col-2">
+            <label class="input">
+                <input type="text" class="required" name="req_key[]" maxlength="100" autocomplete="off" placeholder="Key" />
+            </label>
+        </div>
+
+        <div class="col col-2">
+            <label class="select">
+                <select class="required" name="req_var_type[]" required="required">
+                    {% for type, type_text in var_types %}
+                    <option value="{{ type }}">{{ type_text }}</option>
+                    {% endfor %}
+                </select> <i></i>
+            </label>
+        </div>
+
+        {#<div class="col col-2">
+            <label class="input">
+                <input type="text" class="required" name="req_value[]" maxlength="100" autocomplete="off" placeholder="Sample value" />
+            </label>
+			{% include '/console/inc/req-op-select.twig' %}
+        </div>#}
+
+        <div class="col col-6" style="padding-right: 0">
+            <label class="input">
+                <input type="text" name="req_desc[]" maxlength="100" autocomplete="off" placeholder="Description" />
+            </label>
+        </div>
+
+        <div class="col col-2" style="padding-right: 0">
+            <button class="btn btn-default btn-circle btn-req-plus"
+                    data-clone-class="request-data-frm-template"
+                    data-parent-fieldset="fieldset_request"
+                    data-class = "req-data-frm"><i class="glyphicon glyphicon-plus"></i></button>
+            <button class="btn btn-default txt-color-red btn-circle btn-req-minus"
+                    data-clone-class="request-data-frm-template"
+                    data-parent-fieldset="fieldset_request"
+                    data-class = "req-data-frm"><i class="glyphicon glyphicon-minus"></i></button>
+        </div>
+    </div>
+</section>
+{# request copy form #}

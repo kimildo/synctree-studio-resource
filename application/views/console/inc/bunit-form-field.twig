@@ -1,0 +1,180 @@
+{# request form #}
+<header>
+    <strong>Request Form-Data</strong>
+</header>
+
+<fieldset class="fieldset-input">
+
+    <section>
+        <label class="label"><span class="text-danger">*</span> Request Method</label>
+        <div class="inline-group">
+            <label class="radio">
+                <input type="radio" name="req_method" value="G" {% if biz_info.req_method == 'G' or biz_info.req_method is empty %}checked="checked"{% endif %} />
+                <i></i>GET
+            </label>
+            <label class="radio">
+                <input type="radio" name="req_method" value="P" {% if biz_info.req_method == 'P' %}checked="checked"{% endif %} />
+                <i></i>POST
+            </label>
+            {#<label class="radio">
+                <input type="radio" name="req_method" value="N" {% if biz_info.req_method == 'N' or biz_info.req_method is empty %}checked="checked"{% endif %} />
+                <i></i>None
+            </label>#}
+        </div>
+    </section>
+
+    {% set req_var_types = constant('libraries\\constant\\CommonConst::REQUEST_VAR_TYPES') %}
+    {% if client_request is defined and client_request == true %}
+    {% set req_var_types = constant('libraries\\constant\\CommonConst::RESPONSE_VAR_TYPES') %}
+    {% endif %}
+    {% set req_count = biz_info.request|length %}
+    {% for row in biz_info.request %}
+    <section class="req-data-frm" data-row-id="{{ loop.index }}" data-len="{{ biz_info.request|length }}">
+        <div class="row">
+            <div class="col col-2">
+                {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Key</label>{% endif %}
+                <label class="input">
+                    <input type="hidden" name="param_id" value="{{ row.param_id }}">
+                    <input type="text" name="req_key[]" maxlength="100" autocomplete="off" placeholder="key" class="required" value="{{ row.req_key }}" required="required">
+                </label>
+            </div>
+            <div class="col col-2">
+                {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Var Type</label>{% endif %}
+                <label class="select">
+                    <select name="req_var_type[]" required="required">
+                        {% for type, type_text in req_var_types %}
+                        <option value="{{ type }}" {% if row.req_var_type == type %}selected {% endif %}>{{ type_text }}</option>
+                        {% endfor %}
+                    </select> <i></i>
+                </label>
+            </div>
+            {#<div class="col col-2">
+                {% if loop.index < 2 %}<label class="label"><span class="text-info">*</span> Sample Value</label>{% endif %}
+                <label class="input">
+                    <input type="text" name="req_value[]" maxlength="100" autocomplete="off" placeholder="Sample value" value="{{ row.req_value }}" />
+                </label>
+            </div>#}
+            <div class="col col-6" style="padding-right: 0">
+                {% if loop.index < 2 %}<label class="label"><span class="text-info">*</span> Description</label>{% endif %}
+                <label class="input">
+                    <input type="text" name="req_desc[]" maxlength="100" autocomplete="off" value="{{ row.req_desc }}" placeholder="Description" >
+                </label>
+            </div>
+
+            <div class="col col-2" style="padding-right: 0">
+                {% if loop.index < 2 %}<label class="label">&nbsp;</label>{% endif %}
+                <button class="btn btn-default btn-circle btn-req-plus {% if loop.index < req_count %}hidden{% endif %}"
+                        {% if client_request is defined and client_request == true %}
+                        data-req-type="client"
+                        {% endif %}
+                        data-clone-class="request-data-frm-template"
+                        data-class="req-data-frm"><i class="glyphicon glyphicon-plus"></i></button>
+                <button class="btn btn-default txt-color-red btn-circle btn-req-minus {% if loop.index == 1 %}hidden{% endif %}"
+                        data-clone-class="request-data-frm-template"
+                        data-class="req-data-frm"><i class="glyphicon glyphicon-minus"></i></button>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+
+</fieldset>
+{# request form end #}
+{# response form
+<header>
+    <strong>Response Data</strong>
+</header>
+
+<fieldset class="fieldset-input">
+
+    {% if biz_info.response is not empty %}
+    {% set res_count = biz_info.response|length %}
+    {% for row in biz_info.response %}
+    <section class="res-data-frm" data-row-id="{{ loop.index }}">
+        <div class="row">
+            <div class="col col-2">
+                {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Key</label>{% endif %}
+                <label class="input">
+                    <input type="text" name="res_key[]" maxlength="100" autocomplete="off" placeholder="" value="{{ row.res_key }}" required="required">
+                </label>
+            </div>
+
+            <div class="col col-2">
+                {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Var Type</label>{% endif %}
+                <label class="select">
+                    <select id="app_type" name="res_var_type[]" required="required">
+                        <option value="">select</option>
+                        <option value="1" {% if row.res_var_type == 1 %}selected{% endif %}>int</option>
+                        <option value="2" {% if row.res_var_type == 2 %}selected{% endif %}>string</option>
+                        <option value="3" {% if row.res_var_type == 3 %}selected{% endif %}>boolean</option>
+                        <option value="4" {% if row.res_var_type == 4 %}selected{% endif %}>date</option>
+                    </select> <i></i>
+                </label>
+            </div>
+
+            <div class="col col-6" style="padding-right: 0">
+                {% if loop.index < 2 %}<label class="label">Description</label>{% endif %}
+                <label class="input">
+                    <input type="text" name="res_desc[]" maxlength="100" value="{{ row.res_desc }}" autocomplete="off" placeholder="">
+                </label>
+            </div>
+
+            <div class="col col-2" style="padding-right: 0">
+                {% if loop.index < 2 %}<label class="label">&nbsp;</label>{% endif %}
+                <button class="btn btn-default btn-circle btn-req-plus {% if loop.index < res_count %}hidden{% endif %}"
+                        data-clone-class="response-data-frm-template"
+                        data-parent-fieldset="fieldset_response"
+                        data-class = "res-data-frm"><i class="glyphicon glyphicon-plus"></i></button>
+                <button class="btn btn-default txt-color-red btn-circle btn-req-minus {% if loop.index == 1 %}hidden{% endif %}"
+                        data-clone-class="response-data-frm-template"
+                        data-parent-fieldset="fieldset_response"
+                        data-class = "res-data-frm"><i class="glyphicon glyphicon-minus"></i></button>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+    {% else %}
+    <section class="res-data-frm" data-row-id="1">
+        <div class="row">
+            <div class="col col-2">
+                <label class="label"><span class="text-danger">*</span> Key</label>
+                <label class="input">
+                    <input type="text" name="res_key[]" maxlength="100" autocomplete="off" placeholder="" required="required">
+                </label>
+            </div>
+
+            <div class="col col-2">
+                <label class="label"><span class="text-danger">*</span> Var Type</label>
+                <label class="select">
+                    <select id="app_type" name="res_var_type[]" required="required">
+                        <option value="">select</option>
+                        <option value="1">int</option>
+                        <option value="2">string</option>
+                        <option value="3">date</option>
+                    </select> <i></i>
+                </label>
+            </div>
+
+            <div class="col col-6" style="padding-right: 0">
+                <label class="label">Description</label>
+                <label class="input">
+                    <input type="text" name="res_desc[]" maxlength="100" autocomplete="off" placeholder="">
+                </label>
+            </div>
+
+            <div class="col col-2" style="padding-right: 0">
+                <label class="label">&nbsp;</label>
+                <button class="btn btn-default btn-circle btn-req-plus"
+                        data-clone-class="response-data-frm-template"
+                        data-parent-fieldset="fieldset_response"
+                        data-class = "res-data-frm"><i class="glyphicon glyphicon-plus"></i></button>
+                <button class="btn btn-default txt-color-red btn-circle btn-req-minus hidden"
+                        data-clone-class="response-data-frm-template"
+                        data-parent-fieldset="fieldset_response"
+                        data-class = "res-data-frm"><i class="glyphicon glyphicon-minus"></i></button>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+</fieldset>
+{# response form end #}

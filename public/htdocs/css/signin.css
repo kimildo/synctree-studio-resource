@@ -1,0 +1,276 @@
+@import url(//cdn.jsdelivr.net/font-notosans-kr/1.0.0-v1004/NotoSansKR-2350.css);
+
+* {
+    margin: 0;
+    padding: 0;
+ }
+ 
+html,body {
+    height: 100%;
+}
+ 
+body {
+    display: table;
+    width: 100%;
+}
+
+.sign_in input:-webkit-autofill:hover, 
+.sign_in input:-webkit-autofill:focus,
+.sign_in input:-webkit-autofill {
+    -webkit-box-shadow:0 0 0 50px white inset;
+}
+ 
+#headers, #footer {
+    display: table-row;
+    width: 100%;
+    height: 1px;
+}
+ 
+#footer {
+    height: 80px;
+    line-height: 50px;
+    text-align: center;
+    background-color: #35393d;
+    font-family: NotoSansKR;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;  
+    letter-spacing: normal;
+    color: #999999
+}
+
+#footer .office {
+    height: 19px;
+}
+
+#container {
+    display: table-row;
+    width: 100%;
+    height: 100%;
+    background-color: #2b2e31;
+}
+
+#container .outer {
+    height: 100%; 
+    margin: 0 auto;
+    display: table;
+}
+
+.outer .inner {
+    width: 1273px;
+    overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.inner .title {
+    width: 315px;
+    height: 30px;
+    margin-bottom: 15px;
+}
+
+.inner .title img {
+    width: 100%;
+    height: 100%;
+}
+
+.inner .section {
+    width: 900px;
+    height: 656px;
+    float: left;
+    position: relative;
+    margin-right: 13px;
+    border-radius: 5px;
+    background-color: #4a4a4a   
+    
+}
+
+.inner .section #ytplayer {
+    width: 900px;
+    height: 656px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.inner .aside {
+    width: 360px; 
+    height: 656px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    float:right;
+    position: relative;
+}
+
+.aside .logo {
+    position: relative;
+    width: 360px;
+    height: 268px;
+}
+
+.aside .logo-partner {
+    position: relative;
+    width: 360px;
+    height: 225px;
+}
+
+.aside .logo_img {
+    position: absolute;
+    top: 60px;
+    left: 130px;
+    width: 100px;
+    height: 163px;
+}
+
+.aside .logo-partner > .logo_img{
+    top: 35px;
+}
+
+.aside .logo_img img {
+    width: 100%;
+    height: 100%;
+}
+
+.aside .sign_in {
+    width: 360px;
+    height: 388px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-family: NotoSansKR;
+    font-size: 15px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+}
+
+.sign_in .sign_in_text {
+    height: 27px;
+    line-height: 15px;
+    border-bottom: 2px solid black;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a4a4a;
+}
+
+.sign_in .partner-info{
+    margin: 10px 0px;
+    padding : 10px 15px;
+    border-radius: 3px;
+    background-color: #f3f6f8;
+}
+
+.sign_in .partner-info > p {
+    margin: 0px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666666;
+}
+
+.sign_in .partner-info > p > span{
+    width:56px;
+    margin-right: 15px;
+    font-size: 12px;
+    display: inline-block;
+    color:#999999;
+}
+.sign_in .partner-info > p > span::before{
+    content: '- ';
+}
+
+.sign_input_area {
+    margin-top: 30px;
+}
+
+.sign_input {
+    width: 320px;
+    height: 77px;
+    margin-bottom: 15px;
+}
+
+.partner_input {
+    margin-bottom: 10px;
+}
+
+.sign_input > p {
+    height: 22px;
+    margin: 0px 0px 5px 0px;
+    font-size: 15px;
+    color: #666666;
+}
+
+.sign_input > p {
+    height: 22px;
+    margin: 0px 0px 5px 0px;
+    font-size: 15px;
+    color: #666666;
+}
+
+input:not([type='hidden']) {
+    width: 320px;
+    height: 50px;
+    padding-left: 12px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+input[type='hidden'] {
+    display: none;
+}
+
+.sign_box {
+    width: 320px;
+    height: 22px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    color: #34495e;
+}
+
+.sign_box a {
+    color : #34495e;
+}
+
+.sign_box input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    background-color: #ffffff;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-left: 0px;
+}
+
+.sign_box .alignleft {
+    width: 102px;
+    height: 22px;
+}
+.sign_box .alignright {
+    width: 94px;
+    height: 22px;
+	float: right;
+}
+
+.sign_in button:last-child {
+    width: 320px;
+    height: 65px;
+    margin-top: 10px;
+    border: 1px solid #358ed7;
+    border-radius: 3px;
+    background-color: #358ed7;
+    color: #ffffff;
+    text-align: center;
+    font-size: 14px;
+}
+
+.sign_in .sign_in_btn {
+    width: 47px;
+    height: 65px;
+}
+
+
+
+
+
+

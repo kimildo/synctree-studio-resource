@@ -1,0 +1,57 @@
+<div class="modal fade in" id="modal_operation_test" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><i class="fa fa-lg fa-fw fa-terminal"></i> Test Operator</h4>
+            </div>
+            <div class="modal-body">
+                <h2>Input Parameter Values</h2>
+                <form method="POST" class="widget-body no-padding margin-top-10">
+                    <fieldset class='smart-form' style="padding: 10px;">
+
+                        <section class="req-data-frm" style="margin-bottom: 0px;">
+                            <div class="row">
+                                <div class="col col-2"><label class="label"><span class="text-danger">*</span>
+                                        Key</label></div>
+                                <div class="col col-6"><label class="label"><span class="text-danger">*</span>
+                                        Value</label></div>
+                            </div>
+                        </section>
+                        <div class="req-data-frm-field">
+
+                        </div>
+                    </fieldset>
+                    <p class="text-right" style="padding-right:10px">
+                        <button class="btn btn-success" type="submit">Test</button>
+                    </p>
+                </form>
+                <div class="hide" id="test-result">
+                    <h2>Test result</h2>
+                    <div class="widget-body no-padding margin-top-10">
+                        <pre style="margin: 10px;"><code style="height:600px;overflow-y:scroll;overflow-x:hidden;"
+                                                         class="json" id="biz_test_result"></code></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-test-close" data-dismiss="modal"><i
+                            class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    <div class="hide clone-field">
+        <section class="req-data-frm">
+            <div class="row">
+                <div class="col col-2"><label class="input key"></label></div>
+                <div class="col col-10">
+                    <label class="input ">
+                        <input type="text" name="" autocomplete="off" placeholder="Sample value" required/>
+                    </label>
+                </div>
+
+        </section>
+    </div>
+</div>
+

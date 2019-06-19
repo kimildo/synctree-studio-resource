@@ -1,0 +1,36 @@
+<div class="modal fade in" id="modal_biz_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><i class="fa fa-lg fa-fw fa-puzzle-piece"></i> <span id="">Add</span> Biz Unit</h4>
+            </div>
+            <div class="modal-body">
+                <div class="widget-body no-padding">
+                    <form class="smart-form" id="form_add_bunit" method="post" action="/console/apps/bunit/add">
+                        <fieldset>
+                            <input type="hidden" name="app_id" value="{{ app_id }}" />
+                            <section>
+                                <label class="label">Biz Unit Name</label>
+                                <label class="input">
+                                    <input type="text" id="biz_name" name="biz_name" required="required" maxlength="30"/>
+                                </label>
+                            </section>
+
+                            <section>
+                                <label class="label">Description</label>
+                                <label class="input">
+                                    <input type="text" id="biz_desc" name="biz_desc" maxlength="100" />
+                                </label>
+                            </section>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" id="button_add_biz_proceed" class="btn btn-primary"><i class="fa fa-plus"></i> {{ dictionary["button"]["add"] }}</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

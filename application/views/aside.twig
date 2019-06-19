@@ -1,0 +1,57 @@
+<aside id="left-panel">
+	<nav>
+        <ul>
+
+            {% if is_partner is not defined and teamId is not empty %}
+            <li class="{% if route_name == 'dashboard' %}active{% endif %}">
+                <a href="/{{ dictionary.lang }}/console/dashboard" title="Dashboard">
+					{#<i class="fa fa-lg fa-fw fa-home"></i>#}
+					<span class="icon icon-dash-board"></span>
+                    <span class="menu-item-parent">Dashboard</span>
+                </a>
+            </li>
+			<li class="{% if route_name == 'apps' or route_name == 'biz' %}active{% endif %}">
+                <a href="/{{ dictionary.lang }}/console/apps" title="{{ dictionary['aside']['apps'] }}">
+                    <span class="icon icon-apps"></span>
+					<span class="menu-item-parent">{{ dictionary['aside']['apps'] }} </span>
+                </a>
+            </li>
+			<li class="{% if route_name == 'marketing' %}active{% endif %}">
+                <a href="/{{ dictionary.lang }}/console/marketing" title="{{ dictionary['aside']['marketing'] }}" class="not-ready">
+					<span class="icon icon-marketing"></span>
+                    <span class="menu-item-parent">{{ dictionary['aside']['marketing'] }}</span>
+                </a>
+            </li>
+			<li class="{% if route_name == 'management' %}active{% endif %}">
+                <a href="/{{ dictionary.lang }}/console/apps" title="{{ dictionary['aside']['management'] }}"  class="not-ready">
+                    <span class="icon icon-management"></span>
+					<span class="menu-item-parent">{{ dictionary['aside']['management'] }}</span>
+                </a>
+            </li>
+			<li class="{% if route_name == 'B2B' %}active{% endif %}">
+                <a href="/{{ dictionary.lang }}/console/apps" title="{{ dictionary['aside']['B2B'] }}" class="not-ready">
+                    <span class="icon icon-b2b"></span>
+					<span class="menu-item-parent">{{ dictionary['aside']['B2B'] }}</span>
+                </a>
+            </li>
+            {% elseif teamId is empty %}
+            <li class="active">
+                <a href="#" class="not-ready">
+                    <span class="icon icon-b2b"></span>
+                    <span class="menu-item-parent">Team List</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="active">
+                <a href="#2" title="{{ dictionary['aside']['apps'] }}">
+                    <span class="icon icon-apps"></span>
+                    <span class="menu-item-parent">{{ dictionary['aside']['apps'] }} </span>
+                </a>
+            </li>
+            {% endif %}
+
+
+        </ul>
+    </nav>
+    <span class="minifyme" data-action="minifyMenu"><i class="fa fa-arrow-circle-left hit"></i></span>
+</aside>

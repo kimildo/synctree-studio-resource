@@ -1,0 +1,82 @@
+<div class="modal fade in" id="modal_operator_set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><i class="fa fa-lg fa-fw fa-terminal"></i> Select Operator</h4>
+            </div>
+            <div class="modal-body">
+                <div class="widget-body no-padding">
+                    <form class="smart-form" id="frm_set_operator" onsubmit="return false">
+                        <fieldset>
+                            <section class="row sec-multiselect">
+                                <div class="col col-5">
+                                    <label class="select select-multiple">
+                                        <select class="form-control custom-scroll" multiple="multiple" size="10" name="duallistbox_operator_non" id="duallistbox_operator_non">
+                                            {% if operator|length > 0 %}
+                                                {% for op in operator %}
+                                                    <option value="{{ op.seq }}">{{ op.name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    <div class="trans-button-wrap">
+                                        <button class="btn btn-default btn-circle btn-select-multi"><i class="glyphicon glyphicon-arrow-right"></i> </button>
+                                        <button class="btn btn-default btn-circle btn-select-all"><i class="glyphicon glyphicon-forward"></i> </button>
+                                        <button class="btn btn-default btn-circle btn-relese-multi"><i class="glyphicon glyphicon-arrow-left"></i> </button>
+                                        <button class="btn btn-default btn-circle btn-relese-all"><i class="glyphicon glyphicon-backward"></i> </button>
+                                    </div>
+                                </div>
+                                <div class="col col-5" style="float: right">
+                                    <label class="select select-multiple">
+                                        <select class="form-control custom-scroll" multiple="multiple" size="10" name="duallistbox_operator_sel" id="duallistbox_operator_sel" required="required">
+
+                                        </select>
+                                    </label>
+                                </div>
+                            </section>
+
+
+                            <section class="text-align-right margin-top20">
+                                <button type="button" id="btn_show_add_op" class="btn btn-primary padding-5">
+                                    <i class="fa fa-plus"></i> {{ dictionary["button"]["add_op"] }}</button>
+                            </section>
+                        </fieldset>
+                    </form>
+
+                    <form class="smart-form {% if operator|length > 0 %}hidden{% endif %}" id="form_op_add" name="form_op_add" onsubmit="return false" method="post" 
+						{% if(is_partner is not defined) %} action="/console/apps/op/addCallback" {% else %} action="/partner/bunitDataAddCallback" {% endif %}>
+						<input type="hidden" name="app_id" />
+						<fieldset id="modify-datas">
+							<input type="hidden" name="modify" value="0" />							
+							<input type="hidden" name="prev-op_info"  />
+						</fieldset>
+						
+                        <fieldset>
+                            <section id="sec_op_add">
+                                {% include '/console/inc/operator-add-field.twig' %}
+                                <div class="text-align-right btn-area">
+                                    <button type="button" id="button_save_operator" data-app-id="{{ user_info['selected_app_id'] }}"
+                                            data-atfer-action="none"
+                                            class="btn btn-success btn-save-operator padding-5">
+                                        <i class="fa fa-save"></i> {{ dictionary.button.save }}</button>
+                                    <button type="button" id="button_close_save_operator" class="btn btn-default padding-5">
+                                        <i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                                </div>
+                            </section>
+                        </fieldset>
+                    </form>
+
+
+                </div>
+            </div>
+            <div class="modal-footer {% if is_partner is defined and is_partner == "partner" %}hide{% endif %}">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" id="btn_add_op" class="btn btn-primary"><i class="fa fa-plus"></i> {{ dictionary.button.apply }}</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+

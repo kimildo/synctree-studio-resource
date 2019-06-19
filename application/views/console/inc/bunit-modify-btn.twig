@@ -1,0 +1,17 @@
+{% if ((is_partner is not defined) or (is_partner == 'partner' and row.op_id == op_id)) %}
+<button class="btn btn-declare-op btn-success dropdown-toggle" data-toggle="dropdown">
+{% else %}
+<button class="btn btn-declare-op btn-success disabled">
+{% endif %}
+	<span class="data-op"
+		  data-eq-index="{{ loop.index }}"
+		  data-eq-op-id="{{ row.op_id }}"
+		  data-eq-line-id="{{ row.target_line_id }}"
+		  data-op_info="{{ row.op_info | json_encode() }}"
+		  >{{ row.op_text }} 
+		
+	</span> <span class="caret"></span>
+	{% if (row.is_new is defined) %}
+	<div class='new'><i class='fa fa-star' ></i></div>
+	{% endif %}
+</button>

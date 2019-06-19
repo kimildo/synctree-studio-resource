@@ -1,0 +1,103 @@
+{% extends "layout-no-left.twig" %}
+
+{% block header %}
+    {{ parent() }}
+    <link type="text/css" href="{{ s3Endpoint }}/static/css/landing.css" rel="stylesheet">
+{% endblock header %}
+
+{% block content %}
+
+    <section id="features" class="home-section text-center">
+
+        <div class="heading-about marginbot-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+
+                        {#<div class="section-heading">#}
+                            {#<h2>{{ header_title }}</h2>#}
+                            {#<p>{{ message|nl2br }}</p>#}
+                        {#</div>#}
+
+                        <div class="col-xs-12">
+                            <div class="panel panel-default margin_t_15">
+                                <div class="panel-body">
+                                    {% if message_title|length > 0 %}
+                                        {#<h1 class="page-header margin_tb_10">{{ message_title }}</h1>#}
+                                        <h1 class="page-header margin_tb_10"><i class="fa fa-warning"></i> {{ message_title }}</h1>
+                                    {% endif %}
+                                    <form name='message' method="POST" action="{{ redirect_url }}">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <p class="margin_tb_10">
+                                                {% if message|length > 0 %}
+                                                    {% if message is iterable %}
+                                                        {% for key, msg in message %}
+                                                            <div>{{ dictionary['button'][key]|default(key) }} : {{ msg }} </div>
+                                                            {#{{ key }} : {{ msg }} <br />#}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {#<h1 class="page-header margin_tb_10">{{ message_title }}</h1>#}
+                                                        {{ message|nl2br }}
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                {% if params|length > 0 and params is iterable %}
+                                                    {% for rows in params %}
+                                                    <p class="margin_tb_10">
+                                                        {% for key, msg in rows %}
+                                                            <div style="width:694px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                                                            {% if key == 'URL' %}
+                                                            {{ key }} : <a href="{{ msg }}" title="{{ msg }}" target="_blank">{{ msg }}</a>
+                                                            {% else %}
+                                                            {{ key }} : {{ msg }}
+                                                            {% endif %}
+                                                            </div>
+                                                        {% endfor %}
+                                                    </p>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                </p>
+
+                                            </div>
+                                            {% if popup_close is not empty %}
+                                                <button type="button" class="btn btn-sm btn-primary btn-block" onclick="window.close();">{{ dictionary['button']['close']|default('Close') }}</button>
+                                            {% elseif popup_back is not empty %}
+                                                <button type="button" class="btn btn-sm btn-primary btn-block" onclick="location.href='{{ popup_back_url }}'">{{ dictionary['button']['back']|default('Back') }}</button>
+                                            {% else %}
+                                                <button type="button" class="btn btn-sm btn-primary btn-block">{{ dictionary['button']['confirm']|default('Confirm') }}</button>
+                                            {% endif %}
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="home-section">
+        <div class="row">
+            {# message 종류별로 twig파일 생성하도록 info,error,redirect 등  #}
+
+
+
+
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block page_script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+
+        });
+    </script>
+{% endblock %}

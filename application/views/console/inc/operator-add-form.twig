@@ -1,0 +1,37 @@
+<div class="row">
+    <article class="col-sm-12 col-md-12 col-lg-10">
+
+        <div class="jarviswidget jarviswidget-color-blueDark" id="op_basic" role="widget">
+
+            <header role="heading" class="ui-sortable-handle">
+                <div class="jarviswidget-ctrls" role="menu"></div>
+                <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                <h2>Edit Operator </h2>
+                <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+            </header>
+
+            <div role="content">
+                <div class="widget-body no-padding">
+                    <form class="smart-form" id="form_op_add" name="form_op_add" method="post" action="/console/apps/op/addCallback" >
+                        <input type="hidden" name="app_id" />
+
+                        {% include '/console/inc/operator-add-field.twig' %}
+
+                        <footer>
+                            <button type="button" id="button_save_operator" data-app-id="{{ user_info['selected_app_id'] }}" data-atfer-action="move" class="btn btn-success btn-save-operator">
+                                <i class="fa fa-save"></i> <strong>{{ dictionary.button.save }}</strong>
+                            </button>
+                            <button type="button" class="btn btn-default" onclick="window.history.back();">
+                                {{ dictionary.button.back }}
+                            </button>
+                        </footer>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+
+{% include '/console/inc/req-form.twig' %}
+{% include '/console/inc/res-form.twig' %}

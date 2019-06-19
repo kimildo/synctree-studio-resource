@@ -1,0 +1,11 @@
+<script type="text/javascript">
+
+    var readyState = document.readyState;
+
+    $(window).on("beforeunload", function () {
+        
+        if (!!readyState) {
+            return "Are you sure you want to leave?";
+        }
+    });
+</script>

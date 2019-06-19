@@ -1,0 +1,95 @@
+<aside id="left-panel">
+
+    <!-- User info -->
+    <div class="login-info">
+        <span>
+            <a href="{{ dictionary['lang'] }}/console/user/profile" id="show-shortcut" data-action="toggleShortcut">
+				<img src="{{ s3Endpoint }}/static/img/avatars/male.png" alt="me" class="online">
+				<span title="{{ user_info['sess_userid'] }}">
+                    {{ user_info['sess_userid'] }}
+                </span>
+                {#<i class="fa fa-angle-down"></i>#}
+			</a>
+		</span>
+    </div>
+    <!-- end user info -->
+
+    <nav>
+
+        <ul style="">
+
+            <li class="{% if route_name == 'dashboard' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/dashboard" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i>
+                    <span class="menu-item-parent">Dashboard</span>{#<b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b>#}
+                </a>
+                {#<ul>
+                    <li class="">
+                        <a href="ajax/dashboard.html" title="Dashboard"><span class="menu-item-parent">Analytics</span></a>
+                    </li>
+                    <li class="">
+                        <a href="ajax/dashboard-marketing.html" title="Marketing"><span class="menu-item-parent">Marketing</span></a>
+                    </li>
+                </ul>#}
+            </li>
+
+            {#<li class="{% if route_name == 'automation' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/automation" title="{{ dictionary['aside']['automation'] }}">
+                    <i class="fa fa-lg fa-fw fa-sitemap"></i> <span class="menu-item-parent">{{ dictionary['aside']['automation'] }}</span>
+                </a>
+            </li>#}
+			
+			
+			
+			<li class="{% if route_name == 'apps' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/apps" title="{{ dictionary['aside']['apps'] }}">
+                    <i class="fa fa-lg fa-fw fa-cube"></i> <span class="menu-item-parent">{{ dictionary['aside']['apps'] }}</span>
+                </a>
+            </li>
+			<li class="{% if route_name == 'marketing' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/marketing" title="{{ dictionary['aside']['marketing'] }}">
+                    <i class="fa fa-lg fa-fw fa-cube"></i> <span class="menu-item-parent">{{ dictionary['aside']['marketing'] }}</span>
+                </a>
+            </li>
+			<li class="{% if route_name == 'management' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/apps" title="{{ dictionary['aside']['management'] }}">
+                    <i class="fa fa-lg fa-fw fa-cube"></i> <span class="menu-item-parent">{{ dictionary['aside']['management'] }}</span>
+                </a>
+            </li>
+			<li class="{% if route_name == 'B2B' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/apps" title="{{ dictionary['aside']['B2B'] }}">
+                    <i class="fa fa-lg fa-fw fa-cube"></i> <span class="menu-item-parent">{{ dictionary['aside']['B2B'] }}</span>
+                </a>
+            </li>
+			
+			{#
+			
+			
+			
+			
+
+            <li class="{% if route_name == 'apps' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/apps" title="{{ dictionary['aside']['apps'] }}">
+                    <i class="fa fa-lg fa-fw fa-cube"></i> <span class="menu-item-parent">{{ dictionary['aside']['apps'] }}</span>
+                </a>
+            </li>
+
+            <li class="{% if route_name == 'biz' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/apps/bunit" title="{{ dictionary['aside']['bunit'] }}">
+                    <i class="fa fa-lg fa-fw fa-puzzle-piece"></i> <span class="menu-item-parent">{{ dictionary['aside']['bunit'] }}</span>
+                </a>
+            </li>
+
+            <li class="{% if route_name == 'op' %}active{% endif %}">
+                <a href="/{{ dictionary['lang'] }}/console/apps/op" title="{{ dictionary['aside']['op'] }}">
+                    <i class="fa fa-lg fa-fw fa-terminal"></i> <span class="menu-item-parent">{{ dictionary['aside']['op'] }}</span>
+                </a>
+            </li>#}
+
+        </ul>
+    </nav>
+
+    <span class="minifyme" data-action="minifyMenu">
+        <i class="fa fa-arrow-circle-left hit"></i>
+    </span>
+
+</aside>

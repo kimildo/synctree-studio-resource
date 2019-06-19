@@ -1,0 +1,180 @@
+{% set var_types = constant('libraries\\constant\\CommonConst::REQUEST_VAR_TYPES') %}
+<div class="widget-body no-padding">
+    <div class="smart-form">
+        <div>
+            <section id="sec_op_add">
+                <header>
+                    <strong>Basic Info</strong>
+                </header>
+
+                <fieldset>
+                    <section>
+                        <label class="label"><span class="text-danger">*</span> operator Name</label>
+                        <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                            {{ name }}
+                        </label>
+                    </section>
+
+                    <section>
+                        <label class="label">Description</label>
+                        <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                            {{ desc }}
+                        </label>
+                    </section>
+
+                    <section>
+                        <label class="label"><span class="text-danger">*</span> Method</label>
+                        {% if method == '1' %}Secure Protocol{% else %}URL Scheme{% endif %}
+                    </section>
+
+                    <section>
+                        <label class="label"><span class="text-danger">*</span> Target URL</label>
+                        <label class="input"> <i class="icon-append fa fa-question-circle"></i> {{ target_url }} </label>
+                    </section>
+
+                    <section>
+                        <label class="label"><span class="text-danger">*</span> Target Method</label>
+                        <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                            {{ target_method }}
+                        </label>
+                    </section>
+                    {% if auth_name is defined %}
+                    <section>
+                        <label class="label"><span class="text-info">*</span> API auth name</label>
+                        <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                            {{ auth_name }}
+                        </label>
+                    </section>
+                    {% endif %}
+                    {% if auth_key is defined %}
+                    <section>
+                        <label class="label"><span class="text-info">*</span> API auth key</label>
+                        <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                            {{ auth_key }}
+                        </label>
+                    </section>
+                    {% endif %}
+
+                </fieldset>
+                
+            </section>
+            {# request form #}
+            <header>
+                <strong>Request Form-Data</strong>
+            </header>
+
+            <fieldset class="fieldset-input">
+
+                <section>
+                    <label class="label"><span class="text-danger">*</span> Request Method</label>
+                    <div class="inline-group">
+                        {% if req_method == "G" %}
+                        GET
+                        {% else %}
+                        POST
+                        {% endif %}
+                    </div>
+                </section>
+
+                {% if request is not empty %}
+                {% set req_count = request|length %}
+                {% for row in request %}
+                <section class="req-data-frm" >
+                    <div class="row">
+                        <div class="col col-2">
+                            {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Key</label>{% endif %}
+                            <label class="input">
+                                {{ row.req_key }}
+                            </label>
+                        </div>
+
+                        <div class="col col-2">
+                            {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Var Type</label>{% endif %}
+                            <label class="select">
+                                {{ var_types[row.req_var_type] }}
+                            </label>
+                        </div>
+
+                        <div class="col col-3">
+                            {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Value</label>{% endif %}
+                            <label class="input ellipsis">
+                            {% if row.req_var_type == 'RDATA' %}
+                            <span class='relay-data' data-value='{{ row.req_value }}'>{{ row.req_value }}</span>
+                            {% else %}
+                            {{ row.req_value }}
+                            {% endif %}
+                                
+                            </label>
+                        </div>
+
+                        <div class="col col-5" style="padding-right: 0">
+                            {% if loop.index < 2 %}<label class="label">Description</label>{% endif %}
+                            <label class="input">
+                                {{ row.req_desc }}
+                            </label>
+                        </div>
+                    </div>
+                </section>
+                {% endfor %}
+                
+                {% endif %}
+
+            </fieldset>
+            {# request form end #}
+
+            {# response form #}
+            <header>
+                <strong>Response Data</strong>
+            </header>
+
+            <fieldset class="fieldset-input">
+                {% if response is not empty %}
+                {% set res_count = response|length %}
+                {% for row in response %}
+                <section class="res-data-frm" data-row-id="{{ loop.index }}">
+                    <div class="row">
+                        <div class="col col-2">
+                            {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Key  {{ type }} 1</label>{% endif %}
+                            <label class="input">
+                                {{ row.res_key }}
+                            </label>
+                        </div>
+
+                        <div class="col col-2">
+                            {% if loop.index < 2 %}<label class="label"><span class="text-danger">*</span> Var Type</label>{% endif %}
+                            <label class="select">
+                                {{ var_types[row.res_var_type] }}
+                            </label>
+                        </div>
+
+                        {% if row.res_value is defined %}
+                        <div class="col col-3">
+                            <label class="label"><span class="text-danger">*</span> Value</label>
+                            {{row.res_value}}
+                        </div>
+                            
+                        <div class="col col-5" style="padding-right: 0">
+                            {% if loop.index < 2 %}<label class="label">Description</label>{% endif %}
+                            <label class="input">
+                                {{ row.res_desc }}
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="col col-7" style="padding-right: 0">
+                            {% if loop.index < 2 %}<label class="label">Description </label>{% endif %}
+                            <label class="input">
+                                {{ row.res_desc }}
+                            </label>
+                        </div>
+                        {% endif %}
+                    </div>
+                </section>
+                {% endfor %}
+                {% endif %}
+            </fieldset>
+            {# response form end #}
+        </div>
+    </div>
+
+
+</div>

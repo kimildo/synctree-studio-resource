@@ -1,0 +1,18 @@
+[
+  {
+    "key": "test",
+    "var_type": "integer",
+    "required_flag": "",
+    "desc": "test"
+  },{
+    "key": "",
+    "var_type": "",
+    "required_flag": "TRUE",
+    "desc": "test"
+  },{
+    "key": "test3",
+    "var_type": "asd",
+    "required_flag": "asd",
+    "desc": ""
+  }
+]

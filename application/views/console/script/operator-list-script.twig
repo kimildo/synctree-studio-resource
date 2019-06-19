@@ -1,0 +1,94 @@
+<script type="text/javascript">
+
+    const appId = '{{ app_id }}';
+
+    $(document).ready(function () {
+
+        $(document).on("click", "button[type!=submit]", function (e) {
+            e.preventDefault();
+        });
+
+        $(".operator-row").on("click", function () {
+
+            let $_parent = $(this).parent("tr");
+            let app_id = $_parent.data("app-id");
+            let op_id = $_parent.data("operator-id");
+
+            //console.log("app_id :: " + app_id);
+            //console.log("biz_id :: " + op_id);
+            location.href = "/{{ dictionary.lang }}/console/apps/op/modify/" + op_id;
+        });
+
+        // 오퍼레이터 삭제
+        $("#button_operator_del").on("click", function () {
+
+            let $_this = $(this);
+            let $_form = $("#form_operator_list");
+            let targetUrl = $_form.attr("action");
+
+            if ($(":checkbox[name='ops[]']:checked").length < 1) {
+                showSmallBox("error_message", 3000, "{{ dictionary.alert.no_check }}");
+                return false;
+            }
+
+            $_form.find("input[name='app_id']").val($_this.data("app-id"));
+            let $_params = $_FormDataSerialize($_form);
+
+            $.SmartMessageBox({
+                title: "{{ dictionary['alert']['warn'] }}!",
+                content: "{{ dictionary['alert']['ask'] }}",
+                buttons: "[No][Yes]"
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+                    new $_Ajax().call($_this, targetUrl, $_params);
+                }
+            });
+        });
+
+
+        // 체크박스 전체 선택
+        $(":checkbox[name='chk_all']").on("change", function () {
+
+            let flag = $(this).is(':checked');
+            let $_table = $("#inbox-table");
+            $(":checkbox[name='ops[]']").prop('checked', flag);
+
+            switch (flag) {
+                case true :
+                    $_table.find("tr").addClass("table-selected");
+                    break;
+                default :
+                    $_table.find("tr").removeClass("table-selected");
+                    break;
+            }
+        });
+
+        $(":checkbox[name='ops[]']").on("click", function () {
+            let flag = $(":checkbox[name='ops[]']:checked").length == $(":checkbox[name='ops[]']").length;
+            let $_pid = $(this).parents("tr");
+
+            $(":checkbox[name='chk_all']").prop('checked', flag);
+
+            switch ($(this).is(':checked')) {
+                case true :
+                    $_pid.addClass("table-selected");
+                    break;
+                default :
+                    $_pid.removeClass("table-selected");
+                    break;
+            }
+        });
+
+        setDataTable('inbox-table', undefined, {"order": [[3, "desc"]]}, null, {
+            "lengthChange": false,
+            "searching": false,
+            "columnDefs": [
+                {"targets": [0,2,3], "searchable": false},
+                {"targets": [0,2], "orderable": false}
+            ]
+        });
+
+
+    });// end of document.ready
+
+</script>

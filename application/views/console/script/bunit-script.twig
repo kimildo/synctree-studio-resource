@@ -1,0 +1,546 @@
+<script src="/htdocs/js/highlight/highlight.pack.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+<script type="text/javascript">
+
+    const appId = "{{ app_id }}";
+
+    var action = {
+        modify: function() {
+            location.href = "/{{ dictionary.lang }}/console/apps/bunit/modify/" + appId + "/" +
+                $(this).closest(".biz-list").data("biz-id");
+        }, test: function() {
+            return false;
+        }, del: function() {
+
+            return false;
+        }, exp: function() {
+            return false;
+        },
+    };
+
+    $(document).ready(function() {
+
+        hljs.initHighlightingOnLoad();
+
+        $(".modify").each(function() {
+            $(this).on("click", action.modify);
+        });
+        $("#button_app_del").on("click", action.del);
+
+        // 비즈옵스 등록 모달
+        $("#button_add_bunit").on("click", function() {
+            if (!appId) {
+                alert("앱이 존재하지 않습니다. 앱을 추가하세요.");
+                return;
+            }
+
+            $("#modal_biz_add").modal();
+        });
+
+        // 비즈옵스 등록 액션
+        $("#button_add_biz_proceed").on("click", function() {
+
+            if (!appId) {
+                alert("앱이 존재하지 않습니다. 앱을 추가하세요.");
+                return;
+            }
+
+            let $_this = $(this);
+            let $_form = $("#form_add_bunit");
+            let targetUrl = $_form.attr("action");
+            $_form.find("input[name='app_id']").val($("#button_add_bunit").data("app-id"));
+
+            if (!!$_FormCheckRequired($_form)) {
+                $.SmartMessageBox({
+                    title: "{{ dictionary['alert']['warn'] }}!",
+                    content: "{{ dictionary['alert']['add_ask'] }}",
+                    buttons: "[No][Yes]",
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+                        new $_Ajax().call($_this, targetUrl, $_FormDataSerialize($_form));
+                    }
+                });
+            }
+        });
+
+        // 개별 삭제
+        $(".delete").each(function() {
+            $(this).on("click", function() {
+
+                let $_this = $(this);
+                let $_form = $("#form_biz_list");
+                let targetUrl = $_form.attr("action");
+
+                $_form.find("input[name='app_id']").val(appId);
+                $_form.find("input[name='biz_id']").val($(this).closest(".biz-list").data("biz-id"));
+
+                let $_params = $_FormDataSerialize($_form);
+
+                $.SmartMessageBox({
+                    title: "{{ dictionary['alert']['warn'] }}!",
+                    content: "{{ dictionary['alert']['ask'] }}",
+                    buttons: "[No][Yes]",
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+                        new $_Ajax().call($_this, targetUrl, $_params, $_form.attr("method"), {}, null, function(res) {
+
+                            if (res.result === "success") {
+                                showSmallBox("success_landing");
+                                $_this.closest(".biz-list").remove();
+                                return;
+                            }
+
+                            if (!!console) console.log("error", res);
+                            this.showErrorMessage(res);
+
+                        });
+                    }
+                });
+
+            });
+        });
+
+        // 테스트
+
+        $(".test").each(function() {
+            $(this).on("click", function() {
+                let $_this = $(this);
+                let targetUrl = "/console/apps/bunit/test";
+                let op = $_this.data("op");
+
+                if (op.length < 1) {
+                    showSmallBox("error_message", 3000, "등록된 Operators가 없습니다.");
+                    return false;
+                }
+
+                $.SmartMessageBox({
+                    title: "{{ dictionary['alert']['noti'] }}!",
+                    content: "{{ dictionary['alert']['test_ask'] }}",
+                    buttons: "[No][Yes]",
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+                        let submitData = {
+                            app_id: appId,
+                            biz_id: $_this.closest(".biz-list").data("biz-id"),
+                        };
+                        testBizUnit($_this, targetUrl, submitData);
+                    } //end of if
+                });
+
+            });
+        });
+
+
+
+        // 배포
+
+        let exp = {
+            stats: {
+                "1": "Mock up",
+                "2": "Dev",
+                "3": "UAT",
+                "4": "PUBLISHED",
+            },
+            url: "",
+            data: {
+                app_id: appId,
+                biz_id: "",
+                op_id: "",
+                expireDate: "",
+                partner_id: "",
+            },
+        };
+
+        $(".export").each(function() {
+            $(this).on("click", function() {
+                if ($(this).hasClass("disabled")) { return false; }
+
+                let biz_id = $(this).closest(".biz-list").data("biz-id");
+                let status = $(this).closest(".biz-list").find(".status").val();
+                let operators = $(this).data("operators");
+                let endpoint = $(this).data("endpoint");
+
+                // export
+                if (status === "4") {
+                    // let ready = $(this).data('ready');
+                    let $btn = $(this);
+                    // if(!ready){
+                    // 	showSmallBox('error_message', 5000, '파트너사와 데이터 세팅을 완료 한 후 진행하세요.');
+                    // 	return false;
+                    // }
+
+                    $.SmartMessageBox({
+                        title: "{{ dictionary['alert']['noti'] }}!",
+                        content: "{{ dictionary['alert']['ask'] }}",
+                        buttons: "[No][Yes]",
+                    }, function(ButtonPressed) {
+                        if (ButtonPressed === "Yes") {
+                            // 배포 url 호출
+                            $.ajax({
+                                url: "/console/deploy",
+                                type: "POST",
+                                data: {
+                                    app_id: appId
+                                    , biz_id: biz_id,
+                                },
+                                dataType: "json",
+                                beforeSend: function() {
+                                    $btn.button("loading");
+                                    showSmallBox();
+                                },
+                                success: function(res) {
+
+                                    if (res.result === "success") {
+                                        showSmallBox("success");
+                                        location.reload(true);
+                                    } else {
+                                        showSmallBox("error_message", 5000, res.data.message);
+                                    }
+                                    console.log("deploy return : ", res);
+                                },
+                                complete: function() {
+                                    $btn.button("reset");
+                                },
+                            });
+                        }
+                    });
+                    return false;
+                }
+
+                if (!operators || operators.length === 0) {
+                    showSmallBox("error_message", 5000, "Set operator first.");
+                    return false;
+                }
+
+                let hasCompletePartners = false;
+
+                $("#history").text(exp.stats[status]);
+
+                $("#partners-list").html("");
+
+                $.each(operators, function() {
+
+                    let op = this;
+
+                    let $_button = $("<button />");
+                    let $_sp = $("<span />");
+                    $_sp.addClass("badge").text("Share");
+                    if (typeof op.op_info !== "undefined") {
+                        hasCompletePartners = true;
+                        $_button.text(op.op_info.op_name).addClass("list-group-item").append($_sp).on("click", function() {
+
+                            exp.data.biz_id = biz_id;
+                            exp.data.op_id = op.op_id;
+                            $("#modal_biz_export").
+                                find(".modal-content:eq(1)").
+                                removeClass("hide").
+                                siblings().
+                                addClass("hide");
+                        }).appendTo("#partners-list");
+                    }
+                });
+
+                if (hasCompletePartners) {
+                    $("#endpoint-url").text(endpoint);
+                    $("#modal_biz_export").modal();
+                } else {
+                    showSmallBox("error_message", 5000, "Fail Set Partner.");
+                    return false;
+                }
+
+
+                {#$.SmartMessageBox({
+                    title: "{{ dictionary['alert']['warn'] }}!",
+                    content: "{{ dictionary['alert']['export_ask'] }}",
+                    buttons: "[No][Yes]"
+                }, function (ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+                        console.log(appId, biz_id);
+                    }
+                });#}
+
+
+            });
+        });
+
+        $(".button-history").each(function(idx) {
+
+            $(this).click(function() {
+
+                let bizId = $(this).closest(".biz-list").data("biz-id");
+                let $_btn = $(this);
+                //let i = $(this).index() - 1;
+                let i = idx;
+
+                $.ajax({
+                    url: "/console/deploy/getDeployList",
+                    type: "POST",
+                    data: {app_id: appId ,biz_id: bizId},
+                    dataType: "json",
+                    beforeSend: function() {
+                        $_btn.button("loading");
+                        showSmallBox();
+                    },
+                    success: function(res) {
+
+                        if (res.result !== "success") {
+                            showSmallBox("error_message", 5000, res.data.message);
+                            return;
+                        }
+
+                        if (res.data.length === 0) {
+                            $(".history-data:eq(" + i + ")").
+                                find(".no-history-data").
+                                removeClass("hide").
+                                siblings(".table-responsive").
+                                addClass("hide");
+                            return false;
+                        }
+
+                        $(".deploy-data:eq(" + i + ")").html("");
+                        let index = 0;
+                        let successIndex = 0;
+                        $.each(res.data, function(j, d) {
+                            if (d.status === "Succeeded") {
+                                successIndex = index;
+                                return false;
+                            }
+                            index++;
+                        });
+                        index = 0;
+
+                        $.each(res.data, function(j, d) {
+                            let $_cl = $($("#export-history-list").find("tbody").html());
+
+                            $_cl.find(".deploy-id").text(d.deploymentId);
+                            $_cl.find(".deploy-status").text(d.status);
+                            $_cl.find(".deploy-create").text(d.createTime);
+                            $_cl.find(".deploy-complete").text(d.completeTime);
+                            $_cl.find(".build-ver").text(d.bizOpsVersion);
+
+                            if (d.status === "Succeeded" && index > successIndex) {
+                                $_cl.find(".re-deploy").data("did", d.deploymentId);
+                            } else {
+                                $_cl.find(".re-deploy").addClass("hide");
+                                let $_sp = $("<span />"), txt = "-";
+
+                                if (d.status === "Succeeded" && index === successIndex) {
+                                    txt = "Current Version";
+                                }
+                                $_sp.text(txt);
+                                $_sp.insertAfter($_cl.find(".re-deploy"));
+                            }
+
+                            $_cl.appendTo(".deploy-data:eq(" + i + ")");
+                            index++;
+                        });
+
+                        $(".history-data:eq(" + i + ")").find(".table-responsive").removeClass("hide").
+                            siblings(".no-history-data").addClass("hide");
+
+                        $(".history-data:eq(" + i + ")").find(".re-deploy").each(function() {
+
+                            $(this).click(function() {
+                                let $_btn2 = $(this);
+                                $.SmartMessageBox({
+                                    title: "{{ dictionary['alert']['noti'] }}!",
+                                    content: "{{ dictionary['alert']['ask'] }}",
+                                    buttons: "[No][Yes]",
+                                }, function(ButtonPressed) {
+                                    if (ButtonPressed === "Yes") {
+
+                                        $.ajax({
+                                            url: "/console/deploy/reDeploy",
+                                            type: "POST",
+                                            data: {
+                                                app_id: appId
+                                                , biz_id: biz_id
+                                                , deploy_id: $_btn2.data("did"),
+                                            },
+                                            dataType: "json",
+                                            beforeSend: function() {
+                                                $_btn2.button("loading");
+                                                showSmallBox();
+                                            },
+                                            success: function(res) {
+
+                                                if (res.result === "success") {
+                                                    $(this).addClass("disabled");
+                                                    showSmallBox("success");
+                                                    location.reload(true);
+                                                } else {
+                                                    showSmallBox("error_message", 5000, res.data.message);
+                                                }
+                                            },
+                                            complete: function() {
+                                                $_btn2.button("reset");
+                                            },
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    },
+                    complete: function() {
+                        $_btn.button("reset");
+                        showSmallBox("success_landing");
+                    },
+                });
+            });
+        });
+
+        $("#modal_biz_export").find(".next-step").each(function(i) {
+            $(this).on("click", function() {
+                let next = i + 2, complete = true;
+
+                switch (i) {
+                    case 1 :
+                        if ($("[name=\"partner-name\"]").val().length === 0) {
+
+                            $(".alert-for-id").removeClass("hide");
+                            $("[name=\"partner-name\"]").focus();
+                            complete = false;
+                        }
+                        exp.data.partner_id = $("[name=\"partner-name\"]").val();
+                        $("#view-partner-id").text(exp.data.partner_id);
+                        break;
+                    case 2 :
+                        if ($("[name=\"partner-connect-expire\"]").val().length === 0) {
+                            $(".alert-for-date").removeClass("hide");
+                            $("[name=\"partner-connect-expire\"]").focus();
+                            complete = false;
+                        }
+                        exp.data.expireDate = $("[name=\"partner-connect-expire\"]").val();
+
+                        $("#view-partner-expire").text(exp.data.expireDate);
+
+                        let $btn = $(this);
+
+                        // 담당파트서 url 생성
+                        $.ajax({
+                            url: "/console/apps/bunit/makeurl",
+                            type: "POST",
+                            data: exp.data,
+                            dataType: "json",
+                            beforeSend: function() {
+                                $btn.button("loading");
+                            },
+                            success: function(res) {
+                                if (res.result === "success") {
+                                    exp.url = res.data.url;
+                                }
+                                $("#partner-url, #view-partner-url").text(exp.url);
+                                $("#partner-url, .copy-export-url").data("clipboard-text", exp.url);
+
+                            },
+                            complete: function() {
+                                $btn.button("reset");
+                            },
+                        });
+                        break;
+                    default :
+                        break;
+                }
+                if (complete) {
+                    $("#modal_biz_export").
+                        find(".modal-content:eq(" + next + ")").
+                        removeClass("hide").
+                        siblings().
+                        addClass("hide");
+                }
+            });
+        });
+
+        $("#modal_biz_export").find(".prev-step").each(function(i) {
+            $(this).on("click", function() {
+                $("#modal_biz_export").
+                    find(".modal-content:eq(" + i + ")").
+                    removeClass("hide").
+                    siblings().
+                    addClass("hide");
+            });
+        });
+
+        let resetExport = function() {
+            exp.url = "";
+            exp.data.biz_id = "";
+            exp.data.op_id = "";
+            exp.data.expireDate = "";
+            exp.data.partner_id = "";
+
+            $("#modal_biz_export").find(".modal-content:eq(0)").removeClass("hide").siblings().addClass("hide");
+            $("[name=\"partner-name\"]").val("");
+            $("[name=\"partner-connect-expire\"]").val("");
+            $(".alert-for-id").addClass("hide");
+            $(".alert-for-date").addClass("hide");
+            $("#partner-url, #view-partner-url, #view-partner-id, #view-partner-expire").text("");
+
+        };
+
+        $("#button_reset_export").on("click", resetExport);
+
+        $("#modal_biz_export").on("hide.bs.modal", function() {
+            setTimeout(resetExport, 1000);
+        });
+
+        // 비즈옵스 등록 모달이 닫일 때
+        $("#modal_biz_add").on("hide.bs.modal", function() {
+            $(".note-error").remove();
+            $("#form_add_bunit").each(function() {
+                this.reset();
+            });
+        });
+
+        // 체크박스 전체 선택
+        $(":checkbox[name='chk_all']").on("change", function() {
+
+            let flag = $(this).is(":checked");
+            $(":checkbox[name='bunits[]']").prop("checked", flag);
+
+            switch (flag) {
+                case true :
+                    $("#inbox-table").find("tr").addClass("table-selected");
+                    break;
+                default :
+                    $("#inbox-table").find("tr").removeClass("table-selected");
+                    break;
+            }
+        });
+
+        $(":checkbox[name='bunits[]']").on("click", function() {
+            let flag = $(":checkbox[name='bunits[]']:checked").length == $(":checkbox[name='bunits[]']").length;
+            let $_pid = $(this).parents("tr");
+
+            $(":checkbox[name='chk_all']").prop("checked", flag);
+
+            switch ($(this).is(":checked")) {
+                case true :
+                    $_pid.addClass("table-selected");
+                    break;
+                default :
+                    $_pid.removeClass("table-selected");
+                    break;
+            }
+        });
+
+        var clipboard = new ClipboardJS('.copy-export-url');
+
+        clipboard.on('success', function(e) {
+            //console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            //console.info('Trigger:', e.trigger);
+            showSmallBox('success_message', 3000, 'Copied!!');
+            e.clearSelection();
+        });
+
+        clipboard.on('error', function(e) {
+            console.error('Action:', e.action);
+            console.error('Trigger:', e.trigger);
+        });
+
+
+
+
+    });
+
+</script>

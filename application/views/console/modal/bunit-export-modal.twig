@@ -1,0 +1,126 @@
+<div class="modal fade in" id="modal_biz_export" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            {% include '/console/inc/bunit-export-modal-header.twig' %}
+            <div class="modal-body">
+				<h5>Version history : <span id='history'></span></h5>
+				<label>Setted Url</label>
+				<div id='endpoint-url' class="well well-sm break-word"></div>
+				<label>Shareable Operation List</label>
+				<div id="partners-list" class="list-group">
+
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+            </div>
+        </div><!-- /.modal-content -->
+		<div class="modal-content hide">
+			<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><i class="fa fa-lg fa-fw fa-puzzle-piece"></i> <span id="">Help menu</span></h4>
+            </div>
+            <div class="modal-body">
+				<h5>해당 url은 파트너사들이 직접 정보를 입력하고 셋팅할 수 있는 접속 url과 아이디 암호가 생성됩니다.</h5>
+            </div>
+            <div class="modal-footer">
+				<button type="button" class="btn btn-primary prev-step"><i class="fa fa-arrow-left"></i> 이전</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" class="btn btn-primary next-step"><i class="fa fa-arrow-right"></i> 다음</button>
+            </div>
+		</div>
+		<div class="modal-content hide">
+			{% include '/console/inc/bunit-export-modal-header.twig' %}
+            <div class="modal-body">
+				<h5>파트너의 아이디를 정해주세요.</h5>
+				<div class="input-group">
+					<input type="text" name="partner-name" class="form-control" list="partner_list" placeholder="파트너의 아이디" required />
+					<datalist id="partner_list">
+						{% if partners is defined and partners is not empty %}
+							{% for row in partners %}
+								<option value="{{ row.account_email }}">{{ row.account_email }}</option>
+							{% endfor %}
+						{% endif %}
+					</datalist>
+				</div>
+				<div class="alert alert-for-id alert-warning hide" role="alert">
+					파트너의 아이디를 입력하세요
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				
+            </div>
+            <div class="modal-footer">
+				<button type="button" class="btn btn-primary prev-step"><i class="fa fa-arrow-left"></i> 이전</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" class="btn btn-primary next-step"><i class="fa fa-arrow-right"></i> 다음</button>
+            </div>
+		</div>
+		<div class="modal-content hide">
+			{% include '/console/inc/bunit-export-modal-header.twig' %}
+			<div class="modal-body">
+				<h5>접속 허가 기간을 설정 해주세요.</h5>
+				<div class="input-group">
+				  <input type='date' name="partner-connect-expire" class="form-control" placeholder="접속 허가기간" required />
+				</div>
+				<div class="alert alert-for-date alert-warning hide" role="alert">
+				  파트너의 접속 허가기간을 설정하세요.
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+            </div>
+            <div class="modal-footer">
+				<button type="button" class="btn btn-primary prev-step"><i class="fa fa-arrow-left"></i> 이전</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" class="btn btn-primary next-step"><i class="fa fa-arrow-right"></i> 다음</button>
+            </div>
+		</div>
+		<div class="modal-content hide">
+			{% include '/console/inc/bunit-export-modal-header.twig' %}
+			<div class="modal-body">
+				<h5>아래의 URL과 암호를 셋팅할 수 있는 접속 url이 전달됩니다.</h5>
+				<p>아래의 url을 담당 파트너 개발자분에게 전달 부탁 드립니다.</p>
+				<div id="partner-url" class="well well-sm break-word" data-clipboard-text=""></div>
+				<p class="txt-right"><button type="button" class="btn btn-default copy-export-url"
+											 data-clipboard-action="cut" data-clipboard-target="#partner-url"><i class="fa fa-copy"></i> Copy</button></p>
+            </div>
+            <div class="modal-footer">
+				<button type="button" class="btn btn-primary prev-step"><i class="fa fa-arrow-left"></i> 이전</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" class="btn btn-primary next-step"><i class="fa fa-arrow-right"></i> 다음</button>
+            </div>
+		</div>
+		<div class="modal-content hide">
+			{% include '/console/inc/bunit-export-modal-header.twig' %}
+			<div class="modal-body">
+				<h5>하단의 정보와 같이 설정되었습니다.</h5>
+				<div class="list-group">
+					<div class="list-group-item">
+						<h4 class="list-group-item-heading">파트너 ID</h4>
+						<p class="list-group-item-text" id='view-partner-id'></p>
+					</div>
+					<div class="list-group-item">
+						<h4 class="list-group-item-heading">URL 주소</h4>
+						<p class="list-group-item-text break-word" id='view-partner-url'></p>
+					</div>
+					<div class="list-group-item">
+						<h4 class="list-group-item-heading">로그인 만료일</h4>
+						<p class="list-group-item-text" id='view-partner-expire'></p>
+					</div>
+
+				</div>
+				
+            </div>
+            <div class="modal-footer">
+				<button type="button" class="btn btn-primary prev-step"><i class="fa fa-arrow-left"></i> 이전</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ dictionary.button.close }}</button>
+                <button type="button" id="button_reset_export" class="btn btn-primary"><i class="fa fa-repeat"></i> 재설정</button>
+            </div>
+		</div>
+		
+		
+    </div><!-- /.modal-dialog -->
+</div>
+			

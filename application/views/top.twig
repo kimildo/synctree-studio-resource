@@ -1,0 +1,83 @@
+<!-- Header -->
+<header id="header">
+	<div id="logo-group">
+		<!-- PLACE YOUR LOGO HERE -->
+		<span id="logo"> 
+			<a href='/{{ dictionary.lang }}/console'><img src="/htdocs/img/logo-s-synctree@3x.png" alt="Synctree Studio" /></a>
+		</span>
+		<!-- END LOGO PLACEHOLDER -->
+	</div>
+	
+	
+	{% if user_info.selected_app_id is not empty %}
+    <!-- projects dropdown -->
+    <div class="project-context user-info">
+
+		{% if (is_partner is not defined) %}
+        <span class="project-selector dropdown-toggle" data-toggle="dropdown">
+            <span id="current_product">{{ user_info['selected_app_name'] }}</span> <i class="fa fa-angle-down"></i>
+        </span>
+
+        <!-- Suggestion: populate this list with fetch and push technique -->
+        <ul class="dropdown-menu">
+            {% for row in client_apps %}
+            <li class="top-product-menu{% if row.application_id == user_info['selected_app_id'] %}  active{% endif %}">
+                <a href="javascript:void(0);" title="{{ row.application_name }}" data-app-id="{{ row.application_id }}">{{ row.application_name }}</a>
+            </li>
+            {% endfor %}
+            <li class="divider"></li>
+            <li>
+				<a {% if page_method is defined %}class="button-add-app" href="javascript:void(0);"{% else %}href="/console/apps/showAppModal"{% endif %}><i class="fa fa-plus-circle"></i> {{ dictionary.button.add_app }}</a>
+            </li>
+        </ul>
+		{% endif %}
+
+        <!-- end dropdown-menu-->
+    </div>
+    <!-- end projects dropdown -->
+    {% endif %}
+
+	<div class="pull-right">
+		 {% if (is_partner is not defined) %}
+		 <ul class="header-dropdown-list hidden-xs">
+			 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+				<img src="{{ s3Endpoint }}/static/img/blank.gif" class="flag flag-{% if dictionary['lang'] == 'EN' %}us{% else %}kr{% endif %}"
+					 alt="{{ dictionary['button'][dictionary['lang']] }}">
+				
+			</a>
+			<ul class="dropdown-menu pull-right">
+				<li {% if dictionary['lang'] == 'KO' %}class="active"{% endif %}>
+					<a class="choose-lang ko" href="javascript:void(0);"><img src="{{ s3Endpoint }}/static/img/blank.gif" class="flag flag-kr" alt="{{ dictionary['button']['ko'] }}"> {{ dictionary['button']['ko'] }}</a>
+				</li>
+				<li {% if dictionary['lang'] == 'EN' %}class="active"{% endif %}>
+					<a class="choose-lang en" href="javascript:void(0);"><img src="{{ s3Endpoint }}/static/img/blank.gif" class="flag flag-us" alt="{{ dictionary['button']['en'] }}"> {{ dictionary['button']['en'] }}</a>
+				</li>
+			</ul>
+		</ul>
+					
+		<div class="project-context hidden-xs">
+			
+			<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+				<img src="/htdocs/img/avatars/male.png" alt="me" class="online" />
+				{{ user_info['sess_userid'] }} <i class="fa fa-angle-down"></i>
+			</span>
+
+			<!-- Suggestion: populate this list with fetch and push technique -->
+			<ul class="dropdown-menu user-menu">
+				{% if (is_partner is not defined) %}
+				<li><p>2018.11.21</p></li>
+				<li><p>BizUnit</p></li>
+				<li><p>Commax</p></li>
+				<li class="divider"></li>
+				{% endif %}
+				<li><a id="logout" href="/auth/signout" title="Sign Out" data-action="userLogout"
+						  data-logout-msg="You can improve your security further after logging out by closing this opened browser">Log out</a></li>
+			</ul>
+			<!-- end dropdown-menu-->
+
+		</div>
+		{% endif %}
+	</div>
+
+	
+</header>

@@ -1,0 +1,124 @@
+{% extends "layout-auth.twig" %}
+{% block content_inner %}
+<div class="aside">
+    <div class="logo">
+        <div class="logo_img">
+            <img src="/htdocs/img/logo@3x.png" alt="Synctree Studio log Image" />
+        </div>
+    </div>
+    <div class="sign_in">
+        <form method="POST" action="/{{ dictionary["lang"] }}/auth/signinCallback" id="login-form" novalidate="novalidate">
+            <input type="hidden" name="csrf_name" value="{{ csrf.csrf_name }}" />
+            <input type="hidden" name="csrf_value" value="{{ csrf.csrf_value }}" />
+            <input type="hidden" name="code" value="{{ code }}" />
+
+            <p class="sign_in_text">Sign in</p>
+
+            <div class="sign_input_area">
+                <div class="sign_input">
+                    <p>E-mail</p>
+                    <input type="email" name="email" value="{{ partner_email|default(remember) }}"/>
+                </div>
+                <div class="sign_input">
+                    <p>Password</p>
+                    <input type="password" name="password" />
+                </div>
+            </div>
+
+            <div class="sign_box">
+                <input type="checkbox" name="remember" id="rmb" value="1" {% if remember is not empty %}checked{% endif %}/>
+                <span class="alignleft">Remember Me</span>
+                <a id="forgot-pass" href="#none"><span class="alignright">Forgot ID/PW</span></a>
+            </div>
+            <button type="submit"><span class="sign_in_btn">Sign in</span></button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_script %}
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            pageSetUp();
+
+            var errorClass = 'invalid';
+            var errorElement = 'em';
+
+            var $loginForm = $("#login-form").validate({
+                errorClass		: errorClass,
+                errorElement	: errorElement,
+                highlight: function(element) {
+                    $(element).parent().removeClass('state-success').addClass("state-error");
+                    $(element).removeClass('valid');
+                },
+                unhighlight: function(element) {
+                    $(element).parent().removeClass("state-error").addClass('state-success');
+                    $(element).addClass('valid');
+                },
+                // Rules for form validation
+                rules : {
+                    email : {
+                        required : true,
+                        email : true
+                    },
+                    password : {
+                        required : true,
+                        minlength : 3,
+                        maxlength : 20
+                    }
+                },
+
+                // Messages for form validation
+                messages : {
+                    email : {
+                        required : 'Please enter your email address',
+                        email : 'Please enter a VALID email address'
+                    },
+                    password : {
+                        required : 'Please enter your password'
+                    }
+                },
+
+                // Do not change code below
+                errorPlacement : function(error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+
+            {% if errorstr != '' %}
+            showSmallBox('login_fail');
+            {% endif %}
+
+        }); //end of document ready
+		
+		$('#forgot-pass').click(function(){
+			$("#modal-forget").modal();
+		});
+		$("#modal-forget").find('form').on('submit', function(){
+			let btn = $(this).find('button[type="submit"]');
+            let $_form = $(this);
+            let targetUrl = $_form.attr("action");
+			let $_params = $_FormDataSerialize($_form);
+			
+			new $_Ajax().call(btn, targetUrl, $_params, $_form.attr('method'), {}, function(){
+				showSmallBox("error_message", 1000, "aaaaa");
+			}, function (res) {
+				console.log(res);
+				showSmallBox("error_message", 1000, res.data.message);
+			});
+			
+			
+		});
+		
+		// 앱 등록 모달이 닫일 때
+        $("#modal-forget").on("hide.bs.modal", function () {
+            $("#form_add_app").each(function () {
+                this.reset();
+            });
+        });
+    </script>
+{% endblock page_script %}
+
+

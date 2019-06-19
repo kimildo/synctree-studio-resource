@@ -1,0 +1,37 @@
+{% extends "layout-with-left.twig" %}
+
+{% block content %}
+
+    <div class="inbox-nav-bar no-content-padding">
+        <h1 class="page-title txt-color-blueDark hidden-tablet"><i class="fa fa-fw fa-terminal"></i> Operator</h1>
+        <div class="inbox-checkbox-triggered">
+            <div class="btn-group">
+                <a href="javascript:void(0);" rel="tooltip" title="" id="button_app_del"
+                   data-app-id="{{ user_info['selected_app_id'] }}"
+                   data-placement="right"
+                   data-original-title="{{ dictionary.button.back_list }}"
+                   class="deletebutton btn btn-default"><strong><i class="fa fa-list fa-lg"></i></strong></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="inbox-content" class="inbox-body no-content-padding">
+
+        <div class="inbox-side-bar">
+            <button id="button_add_app"
+                    data-app-id="{{ user_info['selected_app_id'] }}"
+                    class="btn btn-success btn-block btn-save-operator"> <i class="fa fa-save"></i> <strong>{{ dictionary.button.save }}</strong> </button>
+        </div>
+
+        <div class="table-wrap custom-scroll animated fast fadeInRight">
+            {% include '/console/inc/operator-add-form.twig' %}
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block page_script %}
+    {% include '/console/script/ready-state-script.twig' %}
+    {% include '/console/script/operator-script.twig' %}
+{% endblock %}

@@ -1,0 +1,144 @@
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $(document).on("click", "button[type!=submit]", function(e) {
+            e.preventDefault();
+        });
+
+        {# 필드추가 #}
+        $(document).on("click", ".btn-req-plus", function() {
+
+            let $_button = $(this);
+            let $_fieldset = $_button.parents("fieldset.fieldset-input");
+            let clone_class = $_button.data("clone-class");
+            let frm_class = $_button.data("class");
+            let req_type = $_button.data("req-type");
+
+            let len = $("." + frm_class).length;
+            if (len >= 20) {
+                showSmallBox("error_message", 3000, "Too many Elements.");
+                return;
+            }
+
+            frm_class = frm_class + " data-frm-clone";
+            let cloneElements = $("." + clone_class).clone().attr({
+                "data-row-id": len + 1,
+                "class": frm_class,
+            });
+
+            {# 수정 모드인지, 수정모드라면 1번째 줄인지 #}
+
+            var $_sel = cloneElements.find("[name=\"req_var_type[]\"]"),
+                isModify = parseInt($("#form_op_add").find("[name=\"modify\"]").val()),
+                btnIdx = $("#sec_op_add").data("btn-idx"),
+                declaredCnt = $(".declare-op").length;
+
+            console.log("req_type", req_type);
+            if (req_type === "client") {
+                $_sel.find("option[value=\"RDATA\"]").hide();
+            }
+
+            $_sel.on("change", function(e) {
+                var $_f = $(this).closest(".req-data-frm");
+                if (this.value === "RDATA") {
+                    setSelectReqData($_f);
+                } else {
+                    $_f.find("[name=\"req_value[]\"]").prop("disabled", false).parent("label").removeClass("hide");
+                    $_f.find("[name=\"req_op_value[]\"]").prop("disabled", true).parent("label").addClass("hide");
+                }
+            });
+
+            cloneElements.appendTo($_fieldset).find("input[class=required]").attr("required", "required");
+            $_fieldset.find("button.btn-req-plus").addClass("hidden").last().removeClass("hidden");
+
+        });
+
+        $("input:radio[name=\"req_method\"]").on("click", function() {
+            console.log($("input[name=\"req_method\"]:checked").val());
+
+            if ($("input[name=\"req_method\"]:checked").val() === "N") {
+                $(".req-data-frm").hide();
+            } else {
+                $(".req-data-frm").show();
+            }
+        });
+
+        {# 필드제거 #}
+        $(document).on("click", ".btn-req-minus", function() {
+            let $_button = $(this);
+            let $_fieldset = $_button.parents("fieldset.fieldset-input");
+            $_button.parents("section.req-data-frm").remove();
+            $_button.parents("section.res-data-frm").remove();
+            $_fieldset.find("button.btn-req-plus").last().removeClass("hidden");
+        });
+
+        {# 오퍼레이터 저장 #}
+        $(".btn-save-operator").on("click", function() {
+
+            let $_this = $(this);
+            let $_form = $("#form_op_add");
+            let targetUrl = $_form.attr("action");
+            let afterAction = $_this.data("atfer-action");
+            let option = {
+                "after_move_type": "href",
+                "after_move_url": "/{{ dictionary.lang }}/console/apps/op",
+                "after_unload_release": "true",
+            };
+
+            if (afterAction === "none") {
+                option = {
+                    "after_move_type": "",
+                    "after_move_url": "",
+                    "after_unload_release": "",
+                };
+            }
+
+            $_form.find("input[name='app_id']").val($_this.data("app-id"));
+            if (!!$_FormCheckRequired($_form)) {
+                $.SmartMessageBox({
+                    title: "{{ dictionary['alert']['warn'] }}!",
+                    content: "{{ dictionary['alert']['add_ask'] }}",
+                    buttons: "[No][Yes]",
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+
+                        //function (triggerObj, url, params, method, opt, bsCallback, successCallback, failCallback, completeCallback) {
+                        new $_Ajax().call($_this, targetUrl, $_FormDataSerialize($_form), "POST", option, null,
+                            function(res) {
+
+                                if (res.result !== "success") {
+                                    if (!!console) console.log("error", res);
+                                    this.showErrorMessage(res);
+                                    return;
+                                }
+
+                                showSmallBox("success");
+                                readyState = null;
+
+                                if (afterAction === "none") {
+                                    //  파트너사에서 접속해서 오퍼레이터의 내용을 수정했다면
+                                    if (targetUrl === "/partner/bunitDataAddCallback") {
+                                        $("#modal_operator_set").modal("hide");
+                                        location.reload();
+                                        return;
+                                    }
+
+                                    $(".set-operator").trigger("click");
+                                    $("#form_op_add").addClass("hidden");
+                                    $("#frm_set_operator").show();
+                                    $("#modal_operator_set").find(".modal-footer").show();
+                                }
+
+                                location.reload();
+
+                            },
+                        );
+                    }
+                });
+            }
+        });
+
+    });// end of document.ready
+
+</script>

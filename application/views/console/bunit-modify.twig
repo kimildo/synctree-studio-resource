@@ -1,0 +1,388 @@
+{% extends "layout-with-left.twig" %}
+
+{% block header %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/htdocs/css/timeline.css">
+    <link rel="stylesheet" href="/htdocs/css/highlight/darkula.css">
+{% endblock header %}
+
+{% block content %}
+    <section>
+
+        {#<div class="inbox-nav-bar no-content-padding">
+            <h1 class="page-title txt-color-blueDark hidden-tablet"><i class="fa fa-fw fa-puzzle-piece"></i> Biz Unit</h1>
+            <div class="inbox-checkbox-triggered">
+                <div class="btn-group">
+
+                </div>
+            </div>
+        </div>#}
+		<div class="biz-top">
+            {% if (is_partner is not defined) %}
+			<a class='back' href="/{{ dictionary.lang }}/console/apps/bunit/{{ user_info.selected_app_id }}" title='{{ dictionary.button.back }}'>뒤로가기</a>
+            {% endif %}
+			<div class='biz-top-right'>
+				<h1>{{ selected_app.name }} > {{ biz_info.name }}</h1>
+			</div>
+        </div>
+		<div class="biz-btn-wrap">
+            {% if (is_partner is not defined) %}
+            <button data-app-id="{{ user_info.selected_app_id }}" class="btn-save-bunit">{{ dictionary.button.save }}</button>
+			<button data-app-id="{{ user_info.selected_app_id }}" class="btn-test-bunit">{{ dictionary.button.test }}</button>
+			<span>
+				<button id="button_app_del" data-app-id="{{ user_info.selected_app_id }}" class="">{{ dictionary.button.discard_unit }}</button>
+			</span>
+			{% endif %}
+		</div>
+
+        <div id="inbox-content" class="inbox-body no-content-padding">
+            <div class="table-wrap custom-scroll animated fast fadeInRight" style="opacity: 1;margin-left:0;">
+
+                <div >
+{#                    <article style="min-width: 1165px">#}
+					<article style="min-width: 984px">
+
+                        <ul id="biz_tab" class="nav nav-tabs bordered">
+							{% if(is_partner is not defined) %}
+                            <li class="">
+                                <a href="#s1" data-toggle="tab" aria-expanded="false"><i class="fa fa-fw fa-lg fa-gear"></i> Unit Property </a>
+                            </li>
+							{% endif %}
+                            <li class="">
+                                <a href="#s2" data-toggle="tab" aria-expanded="false"><i class="fa fa-fw fa-lg fa-sitemap"></i> Unit Flow</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content padding-15">
+							{% if (is_partner is not defined) %}
+                            <div class="tab-pane fade active in" id="s1">
+                                <div role="content">
+
+                                    <form class="smart-form">
+                                        {# basic #}
+                                        <header>
+                                            <strong>Biz Unit</strong>
+                                        </header>
+
+                                        <fieldset>
+                                            <section>
+                                                <label class="label"><span class="text-danger">*</span> Name</label>
+                                                <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                                                    <input type="text" id="biz_name" name="biz_name" required="required" maxlength="30" autocomplete="off" value="{{ biz_info.name }}"
+                                                           placeholder="">
+                                                    <b class="tooltip tooltip-top-right">
+                                                        <i class="fa fa-warning txt-color-teal"></i>
+                                                        Biz unit name</b>
+                                                </label>
+                                            </section>
+
+                                            <section>
+                                                <label class="label">Description</label>
+                                                <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                                                    <input type="text" id="biz_desc" name="biz_desc" maxlength="100" autocomplete="off" value="{{ biz_info.desc }}"
+                                                           placeholder="">
+                                                    <b class="tooltip tooltip-top-right">
+                                                        <i class="fa fa-warning txt-color-teal"></i>
+                                                        Biz unit description</b>
+                                                </label>
+                                            </section>
+
+                                            {% if biz_info.end_point is not empty %}
+                                                <section>
+                                                    <label class="label"><span class="text-danger">*</span> DEV End Point</label>
+                                                    <label class="input">
+                                                        <span style="width:80%;max-width:1000px;display:inline-block" class="ellipsis">{{ biz_info.dev_end_point }}</span>
+                                                        <a href="{{ biz_info.dev_end_point }}" target="_blank" rel="tooltip" title="" data-placement="top" data-original-title="새창에서 보기"><i class="fa fa-lg fa-external-link"></i></a>
+                                                        <a href="#" rel="tooltip" data-placement="top" data-original-title="복사하기" class="copy-btn" data-clipboard-text="{{ biz_info.dev_end_point }}"><i class="fa fa-lg fa-copy"></i></a>
+                                                        <a href="#" rel="tooltip" data-placement="top" data-env="dev" data-original-title="샘플 소스보기" class="view-source-btn"><i class="fa fa-lg fa-code"></i></a>
+
+                                                    </label>
+                                                </section>
+
+                                                <section>
+                                                    <label class="label"><span class="text-danger">*</span> Product End Point</label>
+                                                    <label class="input">
+                                                        <span style="width:80%;max-width:1000px;display:inline-block" class="ellipsis">{{ biz_info.product_end_point }}</span>
+                                                        <a href="{{ biz_info.product_end_point }}" target="_blank"><i class="fa fa-lg fa-external-link"></i></a>
+                                                        <a href="#" class="copy-btn" data-clipboard-text="{{ biz_info.product_end_point }}"><i class="fa fa-lg fa-copy"></i></a>
+                                                        <a href="#" rel="tooltip" data-placement="top" data-env="prd" data-original-title="샘플 소스보기" class="view-source-btn"><i class="fa fa-lg fa-code"></i></a>
+                                                    </label>
+                                                </section>
+
+                                                <section>
+                                                    <label class="label"><span class="text-danger">*</span> Get Command</label>
+                                                    <label class="input">
+                                                        <span style="width:80%;max-width:1000px;display:inline-block" class="ellipsis">{{ biz_info.get_command }}</span>
+                                                        <a href="{{ biz_info.get_command }}" target="_blank"><i class="fa fa-lg fa-external-link"></i></a>
+                                                        <a href="#" class="copy-btn" data-clipboard-text="{{ biz_info.get_command }}"><i class="fa fa-lg fa-copy"></i></a>
+                                                    </label>
+                                                </section>
+
+                                                <section>
+                                                    <label class="label"><span class="text-danger">*</span> UID</label>
+                                                    <label class="input">
+                                                        {{ biz_info.uid }} <a href="#" class="copy-btn" data-clipboard-text="{{ biz_info.uid }}"><i class="fa fa-copy"></i></a>
+                                                    </label>
+                                                </section>
+
+                                            {% endif %}
+
+                                        </fieldset>
+                                    </form>
+
+                                </div>
+                            </div>
+							{% endif %}
+
+                            <div class="tab-pane fade" id="s2">
+
+                                    <div id="timeline_left">
+                                        <div>
+                                            <!-- Timeline Content -->
+                                            <ul class="timeline-wrapper">
+                                                <li class="smart-timeline">
+                                                    <div class="smart-timeline-list">
+                                                        <div class="smart-timeline-icon btn-group no-border no-padding" id="div_set_client_name">
+                                                            <a href="#" title="Set Name" class="btn btn-default btn-top dropdown-toggle padding-top-10" data-toggle="dropdown">
+                                                                <span class="node-title">{{ biz_info.client_title|default("Client") }}</span>
+																{% if(is_partner is not defined) %}
+																<span class="caret"></span>
+																{% endif %}
+                                                            </a>
+															{% if(is_partner is not defined) %}
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="#" title="Set Name" class="btn-no-action btn_set_node_name" data-client-name="{{ biz_info.client_title|default("Client") }}">
+                                                                        <i class="glyphicon glyphicon-edit"></i> Set Name</a>
+                                                                </li>
+                                                            </ul>
+															{% endif %}
+                                                        </div>
+                                                        <div class="smart-timeline-content">
+
+                                                            <div class="left-static-request">
+                                                                <div class="line"></div>
+                                                            </div>
+                                                            <div class="left-static-response">
+                                                                <div class="line"></div>
+                                                                <div class="arrow">◀</div>
+                                                            </div>
+															
+															
+															{% if (is_partner is not defined) %}
+                                                            <section>
+                                                                <a href="#" class="btn btn-sm btn-default set-client">
+                                                                    {% if biz_info.req_method == 'N' or biz_info.req_method is empty %}
+                                                                        <i class="fa fa-exclamation-triangle text-danger"></i> Set Request
+                                                                    {% else %}
+                                                                        <i class="glyphicon glyphicon-edit"></i> Edit Request
+                                                                    {% endif %}
+                                                                </a>
+                                                                <div class="flow-arrow hidden">
+                                                                    <div class="timeline-static-request">
+                                                                        <div class="line"></div>
+                                                                    </div>
+                                                                    <div class="timeline-static-response">
+                                                                        <div class="line"></div>
+                                                                        <div class="arrow">◀</div>
+                                                                    </div>
+                                                                </div>
+                                                            </section>
+															{%  endif %}
+
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <!-- END Timeline Content -->
+                                        </div>
+                                    </div>
+
+
+                                    <div id="timeline_right">
+
+                                        <div class="well well-sm">
+                                            <!-- Timeline Content -->
+                                            <ul id="timeline_wrapper" class="timeline-wrapper">
+                                                {# clone original #}
+                                                <li class="timeline-orgin hidden">
+                                                    <div class="smart-timeline-list">
+                                                        <div class="smart-timeline-icon btn-group no-border no-padding">
+                                                            <button class="btn btn-default btn-top dropdown-toggle" data-toggle="dropdown">
+
+                                                                <span class="node-title" title="{{ row.line_end_point }}">
+                                                                    <span>/</span><span class="node-title-text">Undefined</span>
+                                                                </span>
+                                                                {#<span class="node-title">Undefined</span>#}
+																{% if(is_partner is not defined) %}
+																<span class="caret"></span>
+																{% endif %}
+                                                            </button>
+															{% if (is_partner is not defined) %}
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    {#<a href="#" title="Set Name"
+                                                                       class="btn-no-action btn-add-prop btn_set_node_name"><i class="glyphicon glyphicon-edit"></i> </a>#}
+                                                                    <a href="#" title="Remove Lifeline"
+                                                                       class="btn-no-action btn-remove-life"><i class="glyphicon glyphicon-minus text-danger"></i> Remove line</a>
+                                                                    {#<a href="#" title="Add Lifeline"
+                                                                       class="btn-no-action btn-add-life hidden"><i class="glyphicon glyphicon-fast-forward"></i> </a>#}
+                                                                </li>
+                                                            </ul>
+															{% endif %}
+                                                        </div>
+                                                        <div class="smart-timeline-content">
+
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                {# clone original #}
+
+                                                <li class="smart-timeline timeline-synctree">
+                                                    <div class="smart-timeline-list">
+                                                        <div class="smart-timeline-icon txt-color-blue">
+                                                            SYNCTREE
+                                                            {#<a href="#" title="Add Lifeline"
+                                                               class="btn btn-default btn-circle btn-add-life {% if biz_info.lines is not empty %}hidden{% endif %}"><i class="glyphicon glyphicon-fast-forward"></i></a>#}
+                                                        </div>
+                                                        <div class="smart-timeline-content">
+
+                                                            {# Operators #}
+                                                            {% if biz_info.operators is not empty %}
+                                                                {% for row in biz_info.operators %}
+                                                                    <section class="sec-unit declare-op">
+                                                                        {% include '/console/inc/bunit-modify-btn.twig' %}
+                                                                        <ul class="dropdown-menu">
+                                                                            <li>
+                                                                                {% if (is_partner == 'partner' and row.op_id == op_id) %}
+																				<a href="#" title="Edit Operator"
+                                                                                   class="btn-no-action modify-operator"><i class="glyphicon glyphicon-edit"></i> Edit Operator</a>
+                                                                                {% else %}
+                                                                                <a href="/{{ dictionary.lang }}/console/apps/op/modify/{{ row.op_id }}" target="_blank" title="Edit Operator"
+                                                                                   class="btn-no-action edit-operator"><i class="glyphicon glyphicon-edit{#glyphicon-eye-open#}"></i> Edit Operator</a>
+                                                                                {% endif %}
+                                                                                {#{% if(is_partner is not defined) %}
+                                                                                <a href="#" title="Remove Operator"
+                                                                                   class="btn-no-action remove-operator"><i class="glyphicon glyphicon-trash text-danger"></i> Remove</a>
+																				{% endif %}#}
+                                                                                {#<a href="#" title="Set Relation"
+                                                                                   class="btn-no-action set-relay-operator"><i class="glyphicon glyphicon-transfer"></i> Set Relation</a>#}
+                                                                            </li>
+                                                                        </ul>
+                                                                        <div class="flow-arrow">
+                                                                            <div class="timeline-static-request">
+                                                                                <div class="line" style="width: 220px;">
+                                                                                    {#<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50px" height="24px" xml:space="preserve">#}
+                                                                                        {#<polygon fill="#ECECEC" points="0,8 23,8 23,0 42,12 23,24 23,16 0,16 "></polygon>#}
+                                                                                    {#</svg>#}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="timeline-static-response">
+                                                                                <div class="line" style="width: 220px;"></div>
+                                                                                <div class="arrow">◀</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                            {# Operators #}
+
+                                                            {# ADD FLOW Button #}
+                                                            <section class="sec-unit {% if biz_info.operators is empty and biz_info.lines is empty %}{#hidden#}{% endif %}">
+																{% if (is_partner is not defined) %}
+                                                                <button class="btn btn-sm btn-default set-operator">
+                                                                    <i class="fa fa-plus text-danger"></i> Modify FLOW
+                                                                </button>
+																{%  endif %}
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        {#<a href="#" title="View Operator"
+                                                                                   class="btn-no-action view-operator"><i class="glyphicon glyphicon-eye-open"></i> View Operator</a>
+                                                                        <a href="#" title="Remove Operator"
+                                                                           class="btn-no-action remove-operator"><i class="glyphicon glyphicon-trash text-danger"></i> Remove</a>#}
+                                                                        <a href="/{{ dictionary.lang }}/console/apps/op/modify/" target="_blank" title="Edit Operator"
+                                                                           class="btn-no-action edit-operator"><i class="glyphicon glyphicon-edit{#glyphicon-eye-open#}"></i> Edit Operator</a>
+                                                                                
+                                                                        {#<a href="#" title="Set Relation"
+                                                                           class="btn-no-action set-relay-operator"><i class="glyphicon glyphicon-transfer"></i> Set Relation</a>#}
+                                                                    </li>
+                                                                </ul>
+                                                                <div class="flow-arrow hidden">
+                                                                    <div class="timeline-static-request">
+                                                                        <div class="line"></div>
+                                                                    </div>
+                                                                    <div class="timeline-static-response">
+                                                                        <div class="line"></div>
+                                                                        <div class="arrow">◀</div>
+                                                                    </div>
+                                                                </div>
+                                                            </section>
+                                                            {# ADD FLOW #}
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+                                                {% if biz_info.lines is not empty %}
+                                                {% for row in biz_info.lines %}
+                                                <li class="smart-timeline lifeline" data-line-id="{{ row.line_id }}">
+                                                    <div class="smart-timeline-list">
+                                                        <div class="smart-timeline-icon btn-group no-border no-padding">
+                                                            <button class="btn btn-default btn-top dropdown-toggle" rel="tooltip" data-placement="top"
+                                                                    data-original-title="{{ row.line_end_point }}" {#data-toggle="dropdown"#}>
+                                                                <span class="node-title" title="{{ row.line_end_point }}/{{ row.line_title }}">
+                                                                    <span>/</span><span class="node-title-text">{{ row.line_title }}</span>
+                                                                </span>
+																{#{% if (is_partner is not defined) %}
+                                                                <span class="caret"></span>
+																{% endif %}#}
+                                                            </button>
+															{% if (is_partner is not defined) %}
+                                                            {#<ul class="dropdown-menu">#}
+                                                                {#<li>#}
+                                                                    {#<a href="#" title="Set Name" class="btn-no-action btn-add-prop btn_set_node_name" data-client-name="{{ row.line_title|default("Undefine") }}"><i class="glyphicon glyphicon-edit"></i> </a>#}
+                                                                    {#<a href="#" title="Remove Lifeline" class="btn-no-action btn-remove-life"><i class="glyphicon glyphicon-minus text-danger"></i> Remove line</a>#}
+                                                                    {#<a href="#" title="Add Lifeline" class="btn-no-action btn-add-life"><i class="glyphicon glyphicon-fast-forward"></i> </a>#}
+                                                                {#</li>#}
+                                                            {#</ul>#}
+															{% endif %}
+                                                        </div>
+                                                        <div class="smart-timeline-content"></div>
+                                                    </div>
+                                                </li>
+                                                {% endfor %}
+                                                {% endif %}
+
+                                            </ul>
+                                            <!-- END Timeline Content -->
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </article>
+					<footer class="text-left">
+                        {% if (is_partner is not defined) %}
+						<a class="footer-back" href="/{{ dictionary.lang }}/console/apps/bunit/{{ user_info.selected_app_id }}" >Back to Unit List</a>
+                        {% endif %}
+					</footer>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include '/console/modal/bunit-test-modal.twig' %}
+    {% include '/console/modal/bunit-set-basic-modal.twig' %}
+    {% include '/console/modal/bunit-set-modal.twig' %}
+    {% include '/console/modal/bunit-node-name-set-modal.twig' %}
+    {% include '/console/inc/req-form.twig' %}
+    {% include '/console/inc/res-form.twig' %}
+    {% include '/console/modal/operator-view.twig' %}
+    {% include '/console/modal/bunit-sample-source-modal.twig' %}
+
+{% endblock %}
+
+{% block page_script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    {% include '/console/script/ready-state-script.twig' %}
+    {% include '/console/script/bunit-flow-script.twig' %}
+    {% include '/console/script/operator-script.twig' %}
+{% endblock %}

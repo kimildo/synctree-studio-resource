@@ -1,0 +1,31 @@
+{% set htmlId = (extr_page is defined) ? "id=extr-page" : '' %}
+{% set s3Endpoint =  constant('libraries\\constant\\CommonConst::AWS_S3_END_POINT') %}
+<!DOCTYPE html>
+<html lang="ko" {{ htmlId }}>
+<head>
+    {% block header %}
+        {% include 'header.twig' %}
+    {% endblock %}
+	{% block inc_css %}{% endblock %}
+</head>
+<body class="smart-style-2">
+{% block prepend_script %}{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% if no_footer is not defined %}
+{% include 'footer.twig' %}
+{% endif %}
+
+<!-- COMMON RELATED PLUGIN(S) -->
+{% block common_script %}
+{% include 'script.twig' %}
+{% endblock %}
+</body>
+
+<!-- PAGE RELATED PLUGIN(S) -->
+{% block page_script %}{% endblock %}
+
+{% include '/analytics/analyticstracking.twig' %}
+
+</html>

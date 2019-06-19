@@ -1,0 +1,1069 @@
+html,
+body {
+	height: 100%;
+	word-break: keep-all;
+	-webkit-text-size-adjust: none
+}
+
+* {
+	margin: 0;
+	padding: 0
+}
+
+img {
+	border: 0
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+textarea,
+p,
+blockquote,
+th,
+td,
+input,
+select,
+button {
+	margin: 0;
+	padding: 0;
+	border: 0
+}
+
+article,
+aside,
+footer,
+header,
+nav,
+section,
+figcaption,
+figure,
+main {
+	display: block
+}
+
+fieldset,
+img {
+	border: 0 none
+}
+
+dl,
+ul,
+ol,
+menu,
+li {
+	list-style: none
+}
+
+a {
+	-webkit-text-decoration: none;
+	cursor: pointer
+}
+
+a:link,
+a:visited,
+a:active,
+a:hover {
+	text-decoration: none;
+	outline: none
+}
+
+input,
+button,
+select {
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none
+}
+
+button {
+	padding: 0
+}
+
+ul,
+ol,
+dl {
+	list-style: none
+}
+
+li {
+	list-style: none
+}
+
+.mt5 {
+	margin-top: 5px
+}
+
+.mt10 {
+	margin-top: 10px
+}
+
+.pt5 {
+	padding-top: 5px
+}
+
+.pt10 {
+	padding-top: 10px
+}
+
+.mr10 {
+	margin-right: 10px
+}
+
+.bdR3 {
+	border-radius: 3px
+}
+
+.bdR17 {
+	border-radius: 17.5px
+}
+
+.lineM15 {
+	border-bottom: 1px solid #dcdcdc;
+	margin: 15px 0
+}
+
+.show {
+	display: block
+}
+
+.hide {
+	display: none
+}
+
+.screen_out {
+	overflow: hidden;
+	position: absolute;
+	width: 0;
+	height: 0;
+	line-height: 0;
+	text-indent: -9999px
+}
+
+.codeView {
+	position: relative;
+	color: #000;
+	margin-top: 15px;
+	box-sizing: border-box;
+	line-height: 1.5;
+	overflow: hidden;
+	cursor: pointer
+}
+
+.codeView .codeTxt {
+	border: solid thin #e6e6e6;
+	padding: 0;
+	font-size: inherit;
+	border-radius: 3px;
+	white-space: pre;
+	box-sizing: border-box
+}
+
+.codeExpendable {
+	max-height: 200px
+}
+
+.codeExpendable:before {
+	content: "Click to Expand";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -40px;
+	z-index: 1;
+	margin: 10px auto;
+	width: 100px;
+	height: 25px;
+	display: block;
+	background: rgba(255, 255, 255, 0.7);
+	border-radius: 25px;
+	font-size: 11px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 25px;
+	cursor: pointer;
+	transition: bottom cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s
+}
+
+.codeExpendable:hover:before {
+	bottom: 0
+}
+
+.codeExpendable:after {
+	position: absolute;
+	content: "";
+	display: block;
+	left: 0;
+	right: 0;
+	bottom: 28px;
+	height: 30px;
+	mix-blend-mode: difference;
+	background: linear-gradient(to bottom, rgba(39, 40, 34, 0) 0, rgba(39, 40, 34, 0.4) 100%)
+}
+
+.wrap:after {
+	content: "";
+	display: block;
+	height: 0;
+	visibility: hidden;
+	clear: both
+}
+
+.wrap header {
+	height: 70px;
+	overflow: hidden;
+	border-bottom: 1px solid #eee;
+	box-sizing: border-box
+}
+
+.wrap header .logo {
+	float: left;
+	width: 152px;
+	height: 56px;
+	background-image: url("https://res.cloudinary.com/postman/image/upload/w_152,h_56,c_fit,f_auto,t_team_logo/v1/team/c3f00547d3cb9f3d852963bf8c7cd751f9367cdda82c7e76afbad433f2433f45");
+	background-size: 100% 100%;
+	margin-top: 7px;
+	margin-left: 15px
+}
+
+.wrap header .headerBtn {
+	float: right;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+	margin: 21px 20px 0 0
+}
+
+.wrap header .headerBtn .publicBtn {
+	background: #999;
+	font-size: 14px;
+	background: url("/htdocs/img/docs/ic-globe-gray.png") left center/17px 17px;
+	background-repeat: no-repeat;
+	color: #888;
+	padding-left: 20px;
+	line-height: 30px
+}
+
+.wrap header .headerBtn .psotBtn {
+	margin-left: 10px;
+	height: 30px;
+	width: 123px
+}
+
+.wrap header .headerBtn .psotBtn button {
+	position: relative;
+	background: #ff6629;
+	border-radius: 3px;
+	padding: 6px 10px 6px 18px;
+	color: #fff;
+	cursor: pointer
+}
+
+.wrap header .headerBtn .psotBtn button:before {
+	position: absolute;
+	top: 28%;
+	left: 8px;
+	content: "";
+	width: 5px;
+	height: 1px;
+	border-bottom: 5px solid transparent;
+	border-left: 5px solid #fff;
+	border-right: 5px solid transparent;
+	border-top: 5px solid transparent
+}
+
+.wrap header .headerBtn .psotBtn button:focus {
+	outline: none
+}
+
+.wrap header .headerBtn .developeBtn {
+	margin-left: 10px
+}
+
+.wrap header .headerBtn .developeBtn>button {
+	position: relative;
+	border-radius: 3px;
+	padding: 6px 25px 6px 10px;
+	color: #999;
+	background-color: #eee;
+	cursor: pointer
+}
+
+.wrap header .headerBtn .developeBtn>button:after {
+	position: absolute;
+	top: 44%;
+	right: 6px;
+	content: "";
+	width: 12px;
+	height: 6px;
+	background: url("https://synctransp.onntapi.com/htdocs/images/sprite/common.png");
+	background-position: 0 -317px
+}
+
+.wrap header .headerBtn .developeBtn>button:focus {
+	outline: none
+}
+
+.wrap header .headerBtn .developeBtn>ul {
+	display: block;
+	position: absolute;
+	z-index: 60;
+	top: 51px;
+	right: 20px;
+	background: #fefefe;
+	border-radius: 3px;
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37)
+}
+
+.wrap header .headerBtn .developeBtn>ul li {
+	padding: 8px 5px;
+	font-size: 12px;
+	color: grey;
+	text-overflow: ellipsis;
+	cursor: pointer;
+	box-sizing: border-box;
+	text-indent: 5px
+}
+
+.wrap header .headerBtn .developeBtn>ul li:first-child {
+	border-radius: 3px 3px 0 0
+}
+
+.wrap header .headerBtn .developeBtn>ul li:last-child {
+	border-radius: 0 0 3px 3px
+}
+
+.wrap header .headerBtn .developeBtn>ul li.bottomline {
+	border-bottom: 1px solid #e6e6e6;
+	margin: 6px;
+	padding: 0
+}
+
+.wrap header .headerBtn .developeBtn>ul li.deactive {
+	color: #bdbdbd
+}
+
+.wrap header .headerBtn .developeBtn>ul li:hover {
+	background: #eee
+}
+
+.wrap nav {
+	width: 260px;
+	height: 100vh;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	float: left;
+	background: #f8f8f8;
+	padding: 15px 8px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	padding-bottom: 150px;
+	z-index: 999
+}
+
+.wrap nav .navbar .navtitle {
+	background-color: #ededed;
+	border-radius: 3px;
+	padding: 6px 0 6px 6px;
+	color: #282828;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 12px
+}
+
+.wrap nav .navbar .navKind .navSubTitle {
+	display: block;
+	padding: 10px 0 0 6px;
+	color: #666;
+	font-weight: 600;
+	font-size: 12px
+}
+
+.wrap nav .navbar .navKind .navSubTitle>li {
+	display: inline
+}
+
+.wrap nav .navbar .navKind .navSubTitle>li:hover {
+	border-bottom: 1px solid #000;
+	box-sizing: border-box
+}
+
+.wrap nav .navbar .navKind .folder {
+	padding-top: 10px
+}
+
+.wrap nav .navbar .navKind .folder .folderTitle {
+	display: flex;
+	align-items: center
+}
+
+.wrap nav .navbar .navKind .folder .folderTitle>a {
+	display: block
+}
+
+.wrap nav .navbar .navKind .folder .folderTitle>a .FAimg {
+	width: 24px;
+	height: 24px;
+	background-image: url("/htdocs/img/docs/doc_sprites.png");
+	background-size: 200px;
+	background-position: -6px -234px
+}
+
+.wrap nav .navbar .navKind .folder .folderTitle .Fimg {
+	cursor: pointer;
+	width: 24px;
+	height: 24px;
+	background-image: url("/htdocs/img/docs/doc_sprites.png");
+	background-size: 200px;
+	background-position: -6px -205px
+}
+
+.wrap nav .navbar .navKind .folder .folderTitle .Fimg:hover+.Ftxt {
+	border-bottom: 1px solid #000
+}
+
+.wrap nav .navbar .navKind .folder .folderTitle .Ftxt {
+	font-weight: 600;
+	font-size: 12px;
+	color: #444;
+	margin-left: 10px
+}
+
+.wrap nav .navbar .navKind .folder .folderTitle .Ftxt:hover {
+	border-bottom: 1px solid #000
+}
+
+.wrap nav .navbar .navKind .folder .folderGroup {
+	padding-left: 40px
+}
+
+.wrap nav .navbar .navKind .folder .folderGroup li {
+	font-size: 9px;
+	font-weight: 700;
+	color: #282828;
+	padding: 8px 0
+}
+
+.wrap nav .navbar .navKind .folder .folderGroup li .Fget {
+	color: #3eb63e;
+	margin-right: 10px;
+	margin-left: 5px
+}
+
+.wrap nav .navbar .navKind .folder .folderGroup li .Fpost {
+	color: #f5a623;
+	margin-right: 10px
+}
+
+.wrap .sectionWrap {
+	overflow: hidden;
+	background: #333
+}
+
+.wrap .sectionWrap .docBody {
+	overflow: hidden
+}
+
+.wrap .sectionWrap .docBody .leftBody {
+	width: 50%;
+	height: 100%;
+	float: left;
+	box-sizing: border-box;
+	background: #fff
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt {
+	padding: 30px 20px
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt>h1 {
+	color: #282828;
+	font-weight: 400;
+	font-size: 36px;
+	padding-bottom: 30px
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt>h2 {
+	font-weight: 700;
+	font-size: 24px;
+	color: #555;
+	padding-bottom: 10px
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt>h3 {
+	font-weight: 700;
+	font-size: 20px;
+	color: #555;
+	padding-bottom: 5px;
+	padding-top: 15px
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt>ul {
+	font-weight: 400;
+	font-size: 14px;
+	color: #282828;
+	padding-left: 40px
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt>ul li {
+	list-style: disc;
+	line-height: 1.5
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt .codeView {
+	position: relative;
+	color: #000;
+	margin-top: 15px;
+	box-sizing: border-box;
+	line-height: 1.5;
+	overflow: hidden;
+	max-height: 200px;
+	cursor: pointer
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt .codeView:before {
+	content: "Click to Expand";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -40px;
+	z-index: 1;
+	margin: 10px auto;
+	width: 100px;
+	height: 25px;
+	display: block;
+	background: rgba(255, 255, 255, 0.7);
+	border-radius: 25px;
+	font-size: 11px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 25px;
+	cursor: pointer;
+	transition: bottom cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt .codeView:hover:before {
+	bottom: 0
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt .codeView:after {
+	position: absolute;
+	content: "";
+	display: block;
+	left: 0;
+	right: 0;
+	top: 170px;
+	height: 30px;
+	mix-blend-mode: difference;
+	background: linear-gradient(to bottom, rgba(39, 40, 34, 0) 0, rgba(39, 40, 34, 0.1) 100%)
+}
+
+.wrap .sectionWrap .docBody .leftBody .mainTxt .codeView .codeTxt {
+	border: solid thin #e6e6e6;
+	padding: 0;
+	font-size: inherit;
+	border-radius: 3px
+}
+
+.wrap .sectionWrap .docBody .leftBody .folderDetailName {
+	width: 100%;
+	border-top: 1px solid #ececec;
+	border-bottom: 1px solid #ececec;
+	margin-bottom: 20px
+}
+
+.wrap .sectionWrap .docBody .leftBody .folderDetailName .folderName {
+	font-weight: 400;
+	font-size: 32px;
+	color: #282828;
+	padding: 25px 20px
+}
+
+.wrap .sectionWrap .docBody .rightBody {
+	width: 50%;
+	height: 100%;
+	float: right;
+	box-sizing: border-box
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect {
+	overflow: hidden;
+	padding-top: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	width: 100%;
+	box-sizing: border-box
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect>p {
+	float: left;
+	color: #d9d9d9;
+	font-size: 12px;
+	line-height: 30px;
+	width: 10%
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect .langList {
+	float: left;
+	width: 87%;
+	padding-left: 15px
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect .langList>button {
+	width: 100%;
+	position: relative;
+	color: #d9d9d9;
+	background: #464646;
+	font-size: 12px;
+	text-align: left;
+	height: 30px;
+	padding-left: 7px;
+	display: block;
+	cursor: pointer
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect .langList>button span {
+	width: 12px;
+	height: 8px;
+	background-image: url("/htdocs/img/docs/doc_sprites.png");
+	background-size: 200px;
+	background-position: -94px -242px;
+	position: absolute;
+	top: 35%;
+	right: 11px
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect .langList>button:focus {
+	outline: none
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect .langList>ul {
+	display: block;
+	background-color: #303030;
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+	margin: 2px;
+	border-radius: 4px
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect .langList>ul li {
+	line-height: 35px;
+	color: #d9d9d9;
+	font-size: 12px;
+	padding-left: 7px
+}
+
+.wrap .sectionWrap .docBody .rightBody .langSelect .langList>ul li:hover {
+	background: #464646
+}
+
+.wrap .sectionWrap .docBody_Fname {
+	overflow: hidden
+}
+
+.wrap .sectionWrap .docBody_Fname .leftBody_Fname {
+	width: 50%;
+	height: 100%;
+	float: left;
+	box-sizing: border-box;
+	background: #fff
+}
+
+.wrap .sectionWrap .docBody_Fname .leftBody_Fname .folderDetailName {
+	width: 100%;
+	border-top: 1px solid #ececec;
+	border-bottom: 1px solid #ececec
+}
+
+.wrap .sectionWrap .docBody_Fname .leftBody_Fname .folderDetailName .folderName {
+	font-weight: 400;
+	font-size: 32px;
+	color: #282828;
+	padding: 25px 20px
+}
+
+.wrap .sectionWrap .docBody_FD {
+	overflow: hidden
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD {
+	width: 50%;
+	height: 100%;
+	float: left;
+	box-sizing: border-box;
+	background: #fff
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD {
+	padding: 15px 20px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD>h3 {
+	font-weight: 700;
+	font-size: 16px;
+	color: #555;
+	padding-bottom: 5px;
+	padding-top: 20px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD>h3.FD_head_txt {
+	font-size: 18px;
+	color: #282828;
+	font-weight: 500
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD>h3.FD_head_txt .FD_H_color_get {
+	color: #3eb63e
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD>h3.FD_head_txt .FD_H_color_post {
+	color: #f5a623
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .FD_H_url {
+	width: 100%;
+	background: #f8f8f8;
+	border: 1px solid #e6e6e6;
+	padding: 6px 10px;
+	border-radius: 3px;
+	font-size: 12px;
+	box-sizing: border-box;
+	margin-top: 15px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .FD_des_txt {
+	padding: 10px 0 10px 10px;
+	border-left: 5px solid #ececec
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD>ul {
+	font-weight: 400;
+	font-size: 14px;
+	color: #282828;
+	padding-left: 40px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD>ul li {
+	list-style: disc;
+	line-height: 1.5
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .FD_table {
+	width: 100%;
+	text-align: left;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 14px;
+	color: #888
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .FD_table th {
+	border: 1px solid #e6e6e6;
+	box-sizing: border-box;
+	padding: 5px 10px;
+	font-weight: inherit
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .FD_table>thead {
+	font-weight: 600
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo {
+	padding-top: 40px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo .HI_title {
+	padding: 0;
+	border-bottom: 1px solid #ececec;
+	box-sizing: border-box;
+	line-height: 24px;
+	font-size: 17px;
+	font-weight: 700;
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo p {
+	font-size: 12px;
+	color: #282828
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo .HI_dubleP {
+	overflow: hidden;
+	padding-top: 15px;
+	padding-bottom: 20px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo .HI_dubleP .HI_subtitle {
+	width: 25%;
+	float: left;
+	font-weight: 700
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo .HI_dubleP .HI_subdetail {
+	float: left;
+	width: 75%
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo .HI_dubleP .HI_subdetail .ST_E {
+	width: 100%;
+	display: inline-block
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo .HI_dubleP .HI_subdetail .ST_K {
+	width: 100%;
+	color: #888;
+	display: inline-block;
+	padding-bottom: 15px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .headerInfo .HI_normalP {
+	padding-bottom: 0
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo {
+	padding-top: 25px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo .BI_title {
+	padding: 0;
+	border-bottom: 1px solid #ececec;
+	box-sizing: border-box;
+	line-height: 24px;
+	font-size: 17px;
+	font-weight: 700;
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo p {
+	font-size: 12px;
+	color: #282828
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo .BI_dubleP {
+	overflow: hidden;
+	padding-top: 15px;
+	padding-bottom: 20px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo .BI_dubleP .BI_subtitle {
+	width: 25%;
+	float: left;
+	font-weight: 700
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo .BI_dubleP .BI_subdetail {
+	float: left;
+	width: 75%
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo .BI_dubleP .BI_subdetail .ST_E {
+	width: 100%;
+	display: inline-block
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo .BI_dubleP .BI_subdetail .ST_K {
+	width: 100%;
+	color: #888;
+	display: inline-block;
+	padding-bottom: 15px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .mainTxt_FD .bodyInfo .BI_normalP {
+	padding-bottom: 0
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .folderDetailName {
+	width: 100%;
+	border-top: 1px solid #ececec;
+	border-bottom: 1px solid #ececec;
+	margin-bottom: 20px
+}
+
+.wrap .sectionWrap .docBody_FD .leftBody_FD .folderDetailName .folderName {
+	font-weight: 400;
+	font-size: 32px;
+	color: #282828;
+	padding: 25px 20px
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD {
+	width: 50%;
+	height: 100%;
+	float: right;
+	box-sizing: border-box;
+	padding: 20px 15px
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode {
+	width: 100%
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_name {
+	color: #d9d9d9;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 26px
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_route {
+	width: 100%;
+	border: 1px solid rgba(217, 217, 217, 0.25);
+	box-sizing: border-box;
+	background-color: rgba(255, 255, 255, 0.1);
+	line-height: 30px;
+	color: #fff;
+	font-size: 12px;
+	padding-left: 10px
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_moreCode {
+	padding: 0;
+	position: relative
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_moreCode .FC_codeView {
+	margin-top: 0;
+	white-space: inherit;
+	border: 1px solid #555;
+	border-top: none;
+	box-sizing: border-box
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_moreCode .FC_codeView .codeTxt {
+	border: none
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_moreCode .FC_copybtn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background-color: rgba(255, 255, 255, 0.3);
+	color: #fff;
+	font-size: 11px;
+	padding: 10px;
+	border-radius: 3px;
+	cursor: pointer
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_moreCode .FC_copybtn:focus {
+	outline: none
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_moreCode .FC_copyClick {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background-color: #a7ff8c;
+	color: #1c4911;
+	font-size: 11px;
+	padding: 10px;
+	border-radius: 3px;
+	cursor: pointer
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folderCode .FC_moreCode .FC_copyClick:focus {
+	outline: none
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folder_subCode {
+	width: 100%;
+	padding-top: 25px
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folder_subCode .FC_subname {
+	color: #d9d9d9;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 26px
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folder_subCode .FC_subroute {
+	width: 100%;
+	border: 1px solid rgba(217, 217, 217, 0.25);
+	box-sizing: border-box;
+	background-color: rgba(255, 255, 255, 0.1);
+	line-height: 30px;
+	color: #fff;
+	font-size: 12px;
+	padding-left: 10px
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folder_subCode .FC_submoreCode {
+	padding: 0;
+	position: relative
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folder_subCode .FC_submoreCode .FC_codeView {
+	margin-top: 0;
+	white-space: inherit;
+	border: 1px solid #555;
+	border-top: none;
+	box-sizing: border-box
+}
+
+.wrap .sectionWrap .docBody_FD .rightBody_FD .folder_subCode .FC_submoreCode .FC_codeView .codeTxt {
+	border: none
+}
+
+.modal {
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: #000;
+	background-color: rgba(0, 0, 0, 0.4)
+}
+
+.modal .modal-content {
+	position: relative;
+	background-color: #fefefe;
+	margin: 5% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%
+}
+
+.modal .modal-content .modal-body {
+	max-height: 600px;
+	overflow-y: auto
+}
+
+.modal .close {
+	color: #aaa;
+	background-color: #fff;
+	padding: 0px 10px 4px;
+	position: absolute;
+	border: solid thin grey;
+	border-radius: 50%;
+	top: 10px;
+	right: 10px;
+	font-size: 28px;
+	font-weight: bold
+}
+
+.modal .close:hover,
+.modal .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer
+}

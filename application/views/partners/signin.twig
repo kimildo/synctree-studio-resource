@@ -1,0 +1,67 @@
+{% set no_footer = true %}
+{% extends "layout-auth.twig" %}
+{% block content_inner %}
+
+<div class="aside">
+	<div class="logo-partner">
+		<div class="logo_img">
+			<img src="/htdocs/img/logo@3x.png" alt="Synctree Studio log Image" />
+		</div>
+	</div>
+	<div class="sign_in">
+		<form method="POST" action="/{{ dictionary["lang"] }}/partner/signinCallback" id="sign-in-form" novalidate="novalidate">
+			<input type="hidden" name="csrf_name" value="{{ csrf.csrf_name }}" />
+			<input type="hidden" name="csrf_value" value="{{ csrf.csrf_value }}" />
+
+			<p class="sign_in_text">Partners Sign up</p>
+			<div class="sign_in_bar"></div>
+
+			<div class='partner-info'>
+				<p><span>Client</span> {{ data.client_name }}</p>
+				<p><span>Partner</span> {{ data.partner_name }}</p>
+				<p><span>App</span> {{ data.app_name }}</p>
+				<p><span>Account</span> {{ data.partner_id }}</p>
+			</div>
+			<p class="pw_text">ID</p>
+			<input type="text" name="id" value='{{ data.partner_id }}' readonly="readonly" required />
+
+			<p class="pw_text">Password</p>
+			<input type="password" name="password" required />
+			<input type="hidden" name="key" value="{{ data.key }}" />
+			<button type="submit"><span class="sign_in_btn">Sign in</span></button>
+		</form>
+	
+	</div>
+</div>
+
+	
+{% endblock %}
+
+{% block page_script %}
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            pageSetUp();
+			$('[name="password"]').focus();
+
+            {% if errorstr != '' %}
+			showSmallBox('error_message', 5000, 'login_fail');
+            {% endif %}
+
+        }); //end of document ready
+		
+		$('#forgot-pass').click(function(){
+			$("#modal-forget").modal();
+		});
+		$("#sign-in-form").on('submit', function(){
+			if($('[name="password"]').val().length === 0){
+				showSmallBox('error_message', 5000, 'Enter your password');
+				$('[name="password"]').focus();
+				return false;
+			}
+		});
+    </script>
+{% endblock page_script %}
+
+

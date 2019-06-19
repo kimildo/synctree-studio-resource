@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>{{ biz_name }} - STUDIO</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="Description" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="" />
+    <meta name="Keywords" content="" />
+    <meta name="Author" content="" />
+    <meta name="robots" content="" />
+    <meta name="viewport" content="width=device-width, inimtial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"/>
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/htdocs/css/docs.css" />
+
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <div class="logo_bak"></div>
+        <div class="headerBtn">
+
+        </div>
+    </header>
+    <!--header-->
+
+    <nav>
+        <div class="navbar">
+            <p class="navtitle">{{ biz_name }} - STUDIO</p>
+            <ul class="navKind">
+                <a href="#" class="navSubTitle"
+                ><li>Introduction</li></a
+                >
+                <!--첫번째 폴더-->
+                <li class="folder">
+                    <div class="folderTitle">
+                        <a href="#">
+                            <div class="FAimg"></div>
+                        </a>
+                        <div class="Fimg"></div>
+                        <p class="Ftxt">{{ biz_name }}</p>
+                    </div>
+                    <ul class="folderGroup">
+                        {% for op in operators %}
+                        <li>
+                            <a href="#{{ op.op_id }}" class="{% if op.req_method == 'P' %}Fpost{% else %}Fget{% endif %}">
+                                {% if op.req_method == 'P' %}POST{% else %}GET{% endif %}
+                            </a>
+                            <a href="#{{ op.op_id }}">{{ op.op_name }}</a>
+                        </li>
+                        {% endfor %}
+                        <li>
+                            <a href="#command" class="Fpost">POST</a>
+                            <a href="#command">보안 프로토콜</a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <!--nav-->
+
+    <div class="sectionWrap">
+        <section class="docBody">
+            <div class="leftBody">
+                <div class="mainTxt">
+                    <h1>{{ biz_name }} - Studio</h1>
+                    <h3>Description</h3>
+                    <ul>
+                        <li>{{ biz_desc|default('-') }}</li>
+                        <li>기본적으로 Response 데이터 형식은 json 입니다.</li>
+                    </ul>
+                    <h3>End Point</h3>
+                    <ul>
+                        <li>
+                            <a href="#">{{ product_end_point }}</a>
+                        </li>
+                    </ul>
+
+                    <h3>Request Method</h3>
+                    <ul>
+                        <li>
+                            {% if req_method == 1 %}
+                                <span class="FD_H_color_get" style="color: #3eb63e">GET</span>
+                            {% else %}
+                                <span class="FD_H_color_post" style="color: #f5a623">POST</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+
+                    <h3>REQUEST PARAMETERS</h3>
+                    <ul>
+                        {% for req in request %}
+                        <li>{{ req.req_key }} ({{ req.req_var_type }}) {% if req.req_desc is not empty %}- {{ req.req_desc }} {% endif %}
+                            {% if req.required_flag == 1  %}<span style="color: #f5a623">(Required)</span>{% endif %}</li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+                <!--mainTxt-->
+            </div>
+            <!--leftBody-->
+
+            <div class="rightBody">
+                <div class="langSelect">
+                    <p>Language</p>
+                    <div class="langList">
+                        <button>PHP<span></span></button>
+                        <ul>
+                            <li>cURL</li>
+                            <li>jQuery</li>
+                            <li>Ruby</li>
+                            <li>Python Requests</li>
+                            <li>Node</li>
+                            <li>PHP</li>
+                            <li>Go</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--rightBody-->
+        </section>
+        <!--section.docBody-->
+
+        <section class="docBody_Fname">
+            <div class="leftBody_Fname">
+                <div class="folderDetailName">
+                    <p class="folderName">Included Operators</p>
+                </div>
+                <!--folderDetailName-->
+            </div>
+        </section>
+        <!--section.docBody_Fname-->
+
+        {% for op in operators %}
+        <section class="docBody_FD" id="{{ op.op_id }}">
+            <div class="leftBody_FD">
+                <div class="mainTxt_FD">
+
+                    <h3 class="FD_head_txt">
+                        {% if op.req_method == 'P' %}
+                        <span class="FD_H_color_post">POST</span>
+                        {% else %}
+                        <span class="FD_H_color_get">GET</span>
+                        {% endif %}
+                        {{ op.op_name }}
+                    </h3>
+
+                    <div class="FD_H_url">
+                        {{ op.target_url }}
+                    </div>
+
+                    {% if op.protocol_type_code == 1 %}
+                    <div>
+                        <button class="btn btn-default">Get Sample Code</button>
+                    </div>
+                    {% endif %}
+
+                    <h3>DESCRIPTION</h3>
+                    <p class="FD_des_txt">
+                        {{ op.op_desc }}
+                    </p>
+
+                    {% if op.target_method is not empty %}
+                    <h3>URL</h3>
+                    <p class="FD_des_txt">/{{ op.target_method }}</p>
+                    {% endif %}
+
+                    {% if op.header_transfer_type_code > 1 %}
+                    <div class="headerInfo">
+                        <p class="HI_title">HEADERS</p>
+                        <div class="HI_dubleP BI_normalP">
+                            <p class="HI_subtitle">Content-Type</p>
+                            <p class="HI_subdetail">
+                                <span class="ST_E">
+                                    {% if op.header_transfer_type_code == 2 %}
+                                    application/json
+                                    {% elseif op.header_transfer_type_code == 3 %}
+                                    application/x-www-form-urlencoded
+                                    {% elseif op.header_transfer_type_code == 4 %}
+                                    application/xml
+                                    {% endif %}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if op.auth_type_code > 0 %}
+                        <div class="headerInfo">
+                            <p class="HI_title">AUTHORIZATION</p>
+                            <div class="HI_dubleP BI_normalP">
+                                <p class="HI_subtitle">Type</p>
+                                <p class="HI_subdetail">
+                                    {% if op.auth_type_code == 1 %}
+                                        <span class="ST_E">Basic</span><br />
+                                        <span class="ST_K">{{ op.auth_keys_array[0].username }} / {{ op.auth_keys_array[0].password }}</span>
+                                    {% else %}
+                                        <span class="ST_E">Bearer Token</span><br />
+                                        <span class="ST_K">{{ op.auth_keys_array[0].token }}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if op.protocol_type_code > 0 %}
+                        <div class="headerInfo">
+                            <p class="HI_title">PROTOCOL TYPE</p>
+                            <div class="HI_dubleP BI_normalP">
+                                <p class="HI_subtitle">Type</p>
+                                <p class="HI_subdetail">
+                                    {% if op.protocol_type_code == 1 %}
+                                        <span class="ST_E">Secure Protocol</span>
+                                    {% else %}
+                                        <span class="ST_E">URL Scheme</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="bodyInfo">
+                        <p class="BI_title">REQUEST PARAMETERS</p>
+                        {% for req in op.request %}
+                        <div class="BI_dubleP">
+                            <p class="BI_subtitle">
+                                <span class="ST_E">{{ req.req_key }}</span>
+                                {% if req.req_required_flag == 1 %}<br /><span class="ST_K" style="color: #f5a623">(Required)</span>{% endif %}
+                            </p>
+                            <p class="BI_subdetail">
+                                <span class="ST_E">{{ req.req_desc|default('-') }}</span><br />
+                                <span class="ST_K">{{ req.req_var_type }}</span>
+                            </p>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="bodyInfo">
+                        <p class="BI_title">Response</p>
+                        {% for res in op.response %}
+                            <div class="BI_dubleP">
+                                <p class="BI_subtitle">
+                                    <span class="ST_E">{{ res.res_key }}</span>
+                                    {% if res.res_required_flag == 1 %}<br /><span class="ST_K" style="color: #f5a623">(Required)</span>{% endif %}
+                                </p>
+                                <p class="BI_subdetail">
+                                    <span class="ST_E">{{ res.res_desc|default('-') }}</span><br />
+                                    <span class="ST_K">{{ res.res_var_type }}</span>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                </div>
+                <!--mainTxt_FD-->
+            </div>
+            <!--leftBody-->
+
+            <div class="rightBody_FD">
+
+                {#{% if op.protocol_type_code == 1 %}#}
+                {#<div class="folderCode">#}
+                    {#<p class="FC_name">Example Secure Protocol Code</p>#}
+                    {#<p class="FC_route">/</p>#}
+                    {#<div class="FC_moreCode">#}
+                        {#<!--class="FC_codeView"는 rightBody에서 margin을 빼는 클래스 입니다.-->#}
+                        {#<pre class="codeView  FC_codeView">#}
+                                {#<code class="codeTxt ">#}
+
+                                {#</code>#}
+                            {#</pre>#}
+                        {#<button class="FC_copybtn">#}
+                            {#Copy to Clipboard#}
+                        {#</button>#}
+                        {#<button class="FC_copyClick">#}
+                            {#Copied#}
+                        {#</button>#}
+                    {#</div>#}
+                {#</div>#}
+                {#<!--folderCode-->#}
+                {#{% endif %}#}
+
+
+            </div>
+            <!--rightBody_FD-->
+        </section>
+        {% endfor %}
+
+        <section class="docBody_FD" id="command">
+            <div class="leftBody_FD">
+                <div class="mainTxt_FD">
+                    <h3 class="FD_head_txt">
+                        <span class="FD_H_color_post">POST</span> 보안 프로토콜
+                    </h3>
+                    <div class="FD_H_url">{{ get_command_end_point }}</div>
+                    <h3>DESCRIPTION</h3>
+                    <p class="FD_des_txt">발급된 키로 저장된 데이터를 가지고 옵니다.</p>
+
+                    <div class="headerInfo">
+                        <p class="HI_title">HEADERS</p>
+                        <div class="HI_dubleP BI_normalP">
+                            <p class="HI_subtitle">Content-Type</p>
+                            <p class="HI_subdetail"><span class="ST_E">application/json</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bodyInfo">
+                        <p class="BI_title">REQUEST PARAMETERS</p>
+                        <div class="BI_dubleP">
+                            <p class="BI_subtitle">
+                                <span class="ST_E">event_key</span>
+                                <br /><span class="ST_K" style="color: #f5a623">(Required)</span>
+                            </p>
+                            <p class="BI_subdetail">
+                                <span class="ST_E">파라미터로 받은 이벤트 키</span><br />
+                                <span class="ST_K">STR</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--mainTxt_FD-->
+            </div>
+            <!--leftBody-->
+
+            <div class="rightBody_FD"></div>
+            <!--rightBody_FD-->
+        </section>
+
+
+        <!--section.docBody_FD-->
+    </div>
+    <!--sectionWrap-->
+</div>
+<!--wrap-->
+
+<script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/htdocs/js/docs.js"></script>
+</body>
+</html>
