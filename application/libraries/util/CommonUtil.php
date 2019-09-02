@@ -109,21 +109,42 @@ class CommonUtil
              */
             $method = $request->getMethod();
 
-            if ('POST' === strtoupper($method)) {
-                if (false === ($params = self::getParsedBody($request))) {
-                    if (false === ($params = self::getContents($request))) {
-                        throw new \Exception('failed to params from http body with post');
+            switch (strtoupper($method)) {
+                case 'POST' :
+                case 'PUT' :
+                case 'DELETE' :
+                    if (false === ($params = self::getParsedBody($request))) {
+                        if (false === ($params = self::getContents($request))) {
+                            throw new \Exception('failed to params from http body with post');
+                        }
                     }
-                }
-            } else {
-                if ('GET' === strtoupper($method)) {
+                    break;
+                case 'GET' :
                     if (false === ($params = self::getQueryParams($request))) {
                         throw new \Exception('failed to params from http body with get');
                     }
-                } else {
+                    break;
+                default :
                     throw new \Exception('Not allow http method (method:' . $method . ')');
-                }
             }
+
+//            if ('POST' === strtoupper($method)) {
+//                if (false === ($params = self::getParsedBody($request))) {
+//                    if (false === ($params = self::getContents($request))) {
+//                        throw new \Exception('failed to params from http body with post');
+//                    }
+//                }
+//            } else {
+//                if ('GET' === strtoupper($method)) {
+//                    if (false === ($params = self::getQueryParams($request))) {
+//                        throw new \Exception('failed to params from http body with get');
+//                    }
+//                } else {
+//                    throw new \Exception('Not allow http method (method:' . $method . ')');
+//                }
+//            }
+
+
         } catch (\Exception $ex) {
 
         }
@@ -650,6 +671,44 @@ class CommonUtil
     {
         list($usec, $sec) = explode(' ', microtime());
         return ((float)$usec + (float)$sec);
+    }
+
+    /**
+     * 슬랙 메세지로 발송
+     *
+     * @param        $msg
+     * @param string $userName
+     * @param string $webHookUrl
+     * @param string $channel
+     *
+     * @return bool
+     */
+    public static function sendSlack($msg, $userName = '', $webHookUrl = '', $channel = '')
+    {
+        try {
+
+            $slack = new SlackMessage();
+
+            if (!empty($userName)) {
+                $slack->setUserName($userName);
+            }
+
+            if (!empty($webHookUrl)) {
+                $slack->setUserName($webHookUrl);
+            }
+
+            if (!empty($channel)) {
+                $slack->setChannel($channel);
+            }
+
+            $slack->setMessage($msg);
+            $slack->send();
+
+        } catch (\Exception $e) {
+            LogMessage::error('Slack send fail');
+        }
+
+        return true;
     }
 
 

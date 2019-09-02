@@ -36,7 +36,7 @@ abstract class Synctree
     protected $promise;
     protected $promiseResponseData;
     protected $asyncReturnDatas;
-    protected $httpReqTimeout = 5;
+    protected $httpReqTimeout = 10;
     protected $httpConnectTimeout = 5;
     protected $httpReqVerify = false;
 
@@ -440,17 +440,19 @@ abstract class Synctree
      * 로그 S3 업로드
      * @todo 추후 로그서버를 별도로 구축, 비동기로 전환
      *
-     * @param $fileName
-     * @param $contents
-     * @param $appId
-     * @param $bizId
-     * @param $timestamp
+     * @param        $fileName
+     * @param        $contents
+     * @param        $appId
+     * @param        $bizId
+     * @param null   $timestamp
+     * @param string $iniFileName
      *
      * @return bool
      */
-    protected function _saveLog($fileName, $contents, $appId, $bizId, $timestamp = null)
+    protected function _saveLog($fileName, $contents, $appId, $bizId, $timestamp = null, $iniFileName = 'default')
     {
         $result = true;
+        return $result;
 
         try {
 
@@ -466,10 +468,9 @@ abstract class Synctree
 
             if (APP_ENV === APP_ENV_PRODUCTION) {
                 $s3FileName = date('Y/m/d', strtotime($curDateTime));
-                $s3FileName .= '/' . $appId . '/' . $bizId . '/' . $fileName;
+                $s3FileName .= '/' . $appId . '/' . $fileName;
+                if (true !== ($s3Result = AwsUtil::s3FileUpload($s3FileName, $file, 's3Log', $iniFileName))) {
 
-                if (true === ($s3Result = AwsUtil::s3FileUpload($s3FileName, $file, 's3Log'))) {
-                    @unlink($file);
                 }
             }
 
@@ -489,13 +490,24 @@ abstract class Synctree
      */
     protected function _getErrorMessage(\Exception $ex)
     {
+        $errMessage = CommonUtil::getErrorMessage($ex);
         $results = [
             'result' => ErrorConst::FAIL_CODE,
             'data'   => [
                 'error_code' => $ex->getCode(),
-                'message' => CommonUtil::getErrorMessage($ex),
+                'message' => $errMessage,
             ]
         ];
+
+        $traceArr = [
+            'host' => $_SERVER['SERVER_NAME'],
+            'path' => $_SERVER['REQUEST_URI'],
+            'query' => $_SERVER['QUERY_STRING'] ?? '',
+        ];
+
+        if (APP_ENV === APP_ENV_STAGING || APP_ENV === APP_ENV_PRODUCTION) {
+            CommonUtil::sendSlack('['. APP_ENV .']['. date('Y-m-d H:i:s') .'] Error :: ' . $errMessage . ' ' . json_encode($traceArr, JSON_UNESCAPED_UNICODE));
+        }
 
         return $results;
     }

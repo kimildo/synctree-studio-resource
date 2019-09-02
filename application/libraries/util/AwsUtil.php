@@ -28,6 +28,7 @@ class AwsUtil
     private static $codeDeploy;
     private static $awsConfig;
 
+    const SES_SENDER_EMAIL = 'info@nntuple.com';
     const S3_IMAGE_UPLOAD_PATH = 'upload' . DIRECTORY_SEPARATOR;
 
     /**
@@ -36,14 +37,15 @@ class AwsUtil
      * @param        $fileName
      * @param        $filePath
      * @param string $confType
+     * @param string $iniFileName
      *
      * @return bool
      */
-    public static function s3FileUpload ($fileName, $filePath, $confType = 's3')
+    public static function s3FileUpload ($fileName, $filePath, $confType = 's3', $iniFileName = 'default')
     {
         $result = false;
 
-        if (false === self::_setAwsS3Config($confType)) {
+        if (false === self::_setAwsS3Config($confType, $iniFileName)) {
             return $result;
         }
 
@@ -118,14 +120,16 @@ class AwsUtil
     */
 
     /**
+     *
      * @param        $fileName
      * @param string $confType
+     * @param string $iniFileName
      *
      * @return bool
      */
-    public static function checkFile($fileName, $confType = 's3')
+    public static function checkFile($fileName, $confType = 's3', $iniFileName = 'default')
     {
-        if (false === self::_setAwsS3Config($confType)) {
+        if (false === self::_setAwsS3Config($confType, $iniFileName)) {
             return false;
         }
 
@@ -135,18 +139,20 @@ class AwsUtil
 
 
     /**
-     * @param array $config
-     * @param       $deployListResult
+     *
+     * @param        $config
+     * @param        $deployListResult
+     * @param string $iniFileName
      *
      * @return array|bool
      */
-    public static function getDeployList(array $config = [], $deployListResult)
+    public static function getDeployList($config, $deployListResult, $iniFileName = 'default')
     {
         $response = false;
         $deployHistory = [];
         $deployFailHistory = [];
 
-        if (false === self::_setAwsCodedeployConfig()) {
+        if (false === self::_setAwsCodedeployConfig('codedeploy', $iniFileName)) {
             return $response;
         }
 
@@ -209,17 +215,18 @@ class AwsUtil
 
     /**
      * 배포 생성
-     *
      * see https://docs.aws.amazon.com/ko_kr/aws-sdk-php/v3/api/api-codedeploy-2014-10-06.html#createdeployment
-     * @param array $config
+     *
+     * @param array  $config
+     * @param string $iniFileName
      *
      * @return bool
      */
-    public static function createCodeDeploy(array $config = [])
+    public static function createCodeDeploy(array $config = [], $iniFileName = 'default')
     {
         $response = false;
 
-        if (false === self::_setAwsCodedeployConfig()) {
+        if (false === self::_setAwsCodedeployConfig('codedeploy', $iniFileName)) {
             return $response;
         }
 
@@ -242,9 +249,14 @@ class AwsUtil
                         'ec2TagSetList' => [
                             [
                                 [
-                                    'Key' => 'DeployGroup',
+                                    'Key' => 'Name',
                                     'Type' => 'KEY_AND_VALUE',
                                     'Value' => $config['ec2TagName'],
+                                ],
+                                [
+                                    'Key' => 'DeployGroup',
+                                    'Type' => 'KEY_AND_VALUE',
+                                    'Value' => $config['deploymentGroupName'],
                                 ]
                             ],
                         ],
@@ -285,14 +297,16 @@ class AwsUtil
             $provider = CredentialProvider::ini($profile, $path);
             $provider = CredentialProvider::memoize($provider);
 
+            $profile = (APP_ENV === APP_ENV_PRODUCTION) ? 'email' : 'default';
+
             $SesClient = new SesClient([
-                'profile' => 'default',
+                'profile' => $profile,
                 'version' => '2010-12-01',
                 'region'  => 'us-east-1',
                 'credentials' => $provider,
             ]);
 
-            $sender = 'kimildo78@nntuple.com';
+            $sender = self::SES_SENDER_EMAIL;
 
             if (empty($recipients)) {
                 throw new \Exception('Recipients is empty!!');
@@ -375,18 +389,25 @@ class AwsUtil
 
 
     /**
-     * @param $confType
+     *
+     * @param        $confType
+     * @param string $iniFileName
      *
      * @return S3Client|bool
      */
-    private static function _setAwsS3Config($confType)
+    private static function _setAwsS3Config($confType, $iniFileName)
     {
-        $config = include APP_DIR . 'config/' . APP_ENV . '.php';
-        $awsConfig = self::$awsConfig = isset($config['settings']['amazon']) ? $config['settings']['amazon'] : false;
-
-        if (empty($confType)) {
+        if (empty($confType) || empty($iniFileName)) {
             return false;
         }
+
+        if ($iniFileName === 'ntuple') {
+            $iniFileName = 'default';
+        }
+
+        $config = include APP_DIR . 'config/' . APP_ENV . '.php';
+        $iniFiles = parse_ini_file($config['settings']['secure_config']['path'] . $iniFileName . '.ini', true);
+        $awsConfig = self::$awsConfig = isset($iniFiles['amazon']) ? $iniFiles : false;
 
         if (false === $awsConfig) {
             return false;
@@ -404,13 +425,23 @@ class AwsUtil
 
     /**
      * @param string $confType
+     * @param string $iniFileName
      *
      * @return CodeDeployClient|bool
      */
-    private static function _setAwsCodedeployConfig($confType = 'codedeploy')
+    private static function _setAwsCodedeployConfig($confType, $iniFileName)
     {
+        if (empty($confType)) {
+            return false;
+        }
+
+        if ($iniFileName === 'ntuple') {
+            $iniFileName = 'default';
+        }
+
         $config = include APP_DIR . 'config/' . APP_ENV . '.php';
-        $awsConfig = self::$awsConfig = isset($config['settings']['amazon']) ? $config['settings']['amazon'] : false;
+        $iniFiles = parse_ini_file($config['settings']['secure_config']['path'] . $iniFileName . '.ini', true);
+        $awsConfig = self::$awsConfig = isset($iniFiles['amazon']) ? $iniFiles : false;
 
         if (false === $awsConfig) {
             return false;

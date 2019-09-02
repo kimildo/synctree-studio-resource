@@ -29,7 +29,7 @@
         "mtdowling/jmespath.php": "~2.2",
         "nette/php-generator": "3.2.*",
         "ramsey/uuid": "^3.8",
-        "phpzip/phpzip": ">=2.0.7",
+        "phpzip/phpzip": "^2.0.7",
         "galbar/jsonpath": "dev-master",
         "ext-json": "*",
         "ext-redis": "*",

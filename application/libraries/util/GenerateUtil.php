@@ -163,8 +163,7 @@ SOURCE;
             $mainBody .= "\t" . '}' . PHP_EOL . PHP_EOL;
         }
 
-        $mainBody .= "\t" . '$redisKey .= \'_\' . md5(json_encode($this->params));' . PHP_EOL;
-
+        $mainBody .= "\t" . '$redisKey .= \'_\' . md5(APP_ENV . json_encode($this->params));' . PHP_EOL;
         $mainBody .= <<<'SOURCE'
         
     $resultData = [];
@@ -824,6 +823,8 @@ SOURCE;
                     break;
             }
         }
+
+        $subBody .= '$options[\'headers\'][\'User-Agent\'] = \'Synctree/2.1 - ' . APP_ENV . '\';' . PHP_EOL;
 
         if ( ! empty($op['arguments'])) {
             $subBodyReqs = '';

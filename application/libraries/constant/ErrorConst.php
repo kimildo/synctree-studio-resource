@@ -109,7 +109,7 @@ class ErrorConst
         self::ERROR_SEND_EMAIL                 => '이메일 발송에 실패하였습니다.',
         self::ERROR_REQUEST_METHOD_NOT_DEFINED => '비즈옵스의 리퀘스트 메소드가 정의 되어있지 않습니다.',
         self::ERROR_REQUEST_KEY_NOT_DEFINED    => '비즈옵스의 리퀘스트 변수가 정의 되어있지 않습니다.',
-        self::ERROR_OPERATOR_SERVER            => '오퍼레이터의 서버에 문제가 있습니다.',
+        self::ERROR_OPERATOR_SERVER            => '오퍼레이터의 서버에 문제가 있거나 연결할 수 없습니다.',
 
 
 

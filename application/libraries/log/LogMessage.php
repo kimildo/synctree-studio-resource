@@ -35,8 +35,9 @@ class LogMessage
     {
         $dt = date('Y-m-d H:i:s') . "." . CommonUtil::getUsec();
 
-        $message = "[" . $dt . "]";
-        $message .= "[" . sprintf("%-18s", gethostname()) . "]";
+        $message = '';
+        //$message .= "[" . $dt . "]";
+        //$message .= "[" . sprintf("%-18s", gethostname()) . "]";
         $message .= "[" . sprintf("%s", $class . "\\" . $func . "(line:" . $line . ")") . "]";
         $message .= $logs . "\n";
 

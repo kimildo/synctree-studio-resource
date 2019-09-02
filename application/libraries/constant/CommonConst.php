@@ -78,6 +78,8 @@ class CommonConst
     const REDIS_SESSION_EXPIRE_TIME_DAY_1   = ((60*60*24)*1);   // sec
     const REDIS_SESSION_EXPIRE_TIME_DAY_2   = ((60*60*24)*2);   // sec
     const REDIS_SESSION_EXPIRE_TIME_DAY_7   = ((60*60*24)*7);   // sec
+    const REDIS_SESSION_EXPIRE_TIME_DAY_30   = ((60*60*24)*30);   // sec
+    const REDIS_SESSION_EXPIRE_TIME_DAY_90   = ((60*60*24)*90);   // sec
 
     /**
      * Redis Keys

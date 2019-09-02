@@ -59,12 +59,41 @@ class SynctreeInternal
      * 에러 메세지
      *
      * @param \Exception $ex
+     * @param bool       $mailSend
+     * @param array      $mailTemplate
+     * @param string     $titlePrefix
      *
      * @return mixed
      */
-    protected function _getErrorMessage(\Exception $ex)
+    protected function _getErrorMessage(\Exception $ex, $mailSend = false, $mailTemplate = [], $titlePrefix = 'TF ')
     {
-        return CommonUtil::getErrorMessage($ex);
+
+        $errMessage = CommonUtil::getErrorMessage($ex);
+        if (true === $mailSend && !empty($mailTemplate)) {
+
+            try {
+
+//                $receiver = [
+//                    'info@nntuple.com',
+//                ];
+//
+//                if (false === \libraries\util\AwsUtil::sendEmail($receiver, ($mailTemplate['subject'] ?? 'Synctree Error'), ($mailTemplate['body'] ?? $errMessage))) {
+//                    throw new \Exception(null, ErrorConst::ERROR_SEND_EMAIL);
+//                }
+
+                if (APP_ENV === APP_ENV_STAGING || APP_ENV === APP_ENV_PRODUCTION) {
+                    if ($ex->getCode() !== ErrorConst::ERROR_RDB_NO_DATA_EXIST) {
+                        CommonUtil::sendSlack('['. APP_ENV .']['. date('Y-m-d H:i:s') .'] ' . $titlePrefix . ($mailTemplate['subject'] ?? '') . ' :: ' . ($mailTemplate['body'] ?? $errMessage));
+                    }
+                }
+
+            } catch (\Exception $ex) {
+                LogMessage::error('Error Email send Fail');
+            }
+
+        }
+
+        return $errMessage;
     }
 
     /**
@@ -135,16 +164,17 @@ class SynctreeInternal
     /**
      * Redis UUID
      *
-     * @param $datas
+     * @param array     $datas
+     * @param float|int $expire
      *
-     * @return bool
+     * @return string
      * @throws \Exception
      */
-    protected function _getRedisEventKey($datas = [])
+    protected function _getRedisEventKey($datas = [], $expire = CommonConst::REDIS_SESSION_EXPIRE_TIME_MIN_3)
     {
         $uuid = Uuid::uuid5(Uuid::NAMESPACE_DNS, session_id() . time());
         $eventKey = strtoupper('event-' . $uuid->toString());
-        RedisUtil::setDataWithExpire($this->redis, CommonConst::REDIS_SECURE_PROTOCOL_COMMAND, $eventKey, CommonConst::REDIS_SESSION_EXPIRE_TIME_MIN_5, $datas);
+        RedisUtil::setDataWithExpire($this->redis, CommonConst::REDIS_SECURE_PROTOCOL_COMMAND, $eventKey, $expire, $datas);
 
         return $eventKey;
     }

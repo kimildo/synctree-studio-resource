@@ -141,10 +141,18 @@ class Deploy extends SynctreeConsole
             }
 
             $conf = $result['data'][1][0];
+            $iniFileName = 'default';
+            $appName = 'studio-deploy';
+
+            if (isset($conf['IAM_info']) && !empty($conf['IAM_info'])) {
+                $info = CommonUtil::getValidJSON($conf['IAM_info']);
+                $iniFileName = $info['company-name'];
+                $appName = $info['app-name'];
+            }
 
             // Codedeploy CLI Config
             $deployConfig = [
-                'applicationName'     => $this->deployConf['app_name'],
+                'applicationName'     => $appName,
                 'deploymentGroupName' => $conf['deploy_group_name'],
                 'bucket'              => $conf['deploy_bucket_name'],
                 'ec2TagName'          => $conf['deploy_ec2_tag_name']
@@ -221,7 +229,7 @@ class Deploy extends SynctreeConsole
             chmod($zipFile, $permission);
 
             // s3 업로드
-            if (false === ($s3Result = AwsUtil::s3FileUpload($userPath . DIRECTORY_SEPARATOR . $zipFileName, $zipFile, 's3deploy'))) {
+            if (false === ($s3Result = AwsUtil::s3FileUpload($userPath . DIRECTORY_SEPARATOR . $zipFileName, $zipFile, 's3deploy', $iniFileName))) {
                 @unlink($zipFile);
                 throw new \Exception(null, ErrorConst::ERROR_FILE_UPLOAD);
             }
@@ -234,7 +242,7 @@ class Deploy extends SynctreeConsole
             $deployConfig['fileName'] = $userPath . DIRECTORY_SEPARATOR . $zipFileName;
 
             // 배포요청 생성
-            if (false === ($deployResult = AwsUtil::createCodeDeploy($deployConfig))) {
+            if (false === ($deployResult = AwsUtil::createCodeDeploy($deployConfig, $iniFileName))) {
                 throw new \Exception(null, ErrorConst::ERROR_FAIL_DEPLOY);
             }
 

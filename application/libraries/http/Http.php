@@ -159,7 +159,7 @@ class Http
             $resData = $ret->getBody()->getContents();
             $resData = CommonUtil::getValidJSON($resData);
             $resStatus = $ret->getStatusCode() . ' ' . $ret->getReasonPhrase();
-            LogMessage::info('`'. $method . '`' . ' url :: ' . $targetUrl . ', status :: ' . $resStatus);
+            LogMessage::info('`'. $method . '`' . ' url :: ' . $targetUrl . ', status :: ' . $resStatus . ', response :: ' , $ret->getBody()->getContents());
 
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             preg_match('/(5[0-9]{2}[a-z\s]+)/i', $e->getMessage(), $output);

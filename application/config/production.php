@@ -2,7 +2,7 @@
     return [
         'settings' => [
 
-            'http_host' => 'studio.synctreengine.com',
+            'http_host' => 'tidesquare.studio.synctreengine.com',
 
             'displayErrorDetails' => true, // set to false in production
             'addContentLengthHeader' => false, // Allow the web server to send the content-length header
@@ -38,26 +38,26 @@
                 'codedeploy' => [
                     'region'       => 'ap-northeast-2',
                     'version'      => 'latest',
-                    'key'          => 'AKIAITXTE2YUV7LBCZWQ',
-                    'secret'       => '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',
+                    'key'          => 'AKIA56G4MQZHZVUBQ2XX',
+                    'secret'       => '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',
                     'app_name'     => 'studio-deploy',
                     'group_name'   => 'studio-deploy-group',
-                    'ec2_tag_name' => 'synctree-studio-v2.1-deploy-target',
-                    'bucket_name'  => 'studio-codedeploy'
+                    'ec2_tag_name' => 'synctree-studio-tidesquare-deploy-target',
+                    'bucket_name'  => 'codedeploy-studio'
                 ],
                 's3deploy' => [
                     'region'      => 'ap-northeast-2',
                     'version'     => 'latest',
-                    'key'         => 'AKIAJ4ZQXS5YLQOQ3MRA',
-                    'secret'      => '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',
-                    'bucket_name' => 'studio-codedeploy'
+                    'key'         => 'AKIA56G4MQZH75EZFN4W',
+                    'secret'      => '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',
+                    'bucket_name' => 'codedeploy-studio'
                 ],
                 's3Log' => [
                     'region'      => 'ap-northeast-2',
                     'version'     => 'latest',
-                    'key'         => 'AKIAI2EKXV2VW4RSNARA',
-                    'secret'      => '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',
-                    'bucket_name' => 'studio-log'
+                    'key'         => 'AKIA56G4MQZHQXQ4QNLG',
+                    'secret'      => '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',
+                    'bucket_name' => 'logs-studio'
                 ],
                 'dynamodb' => [
                     'region'  => 'ap-northeast-1',
@@ -75,7 +75,7 @@
 
             'redis' => [
                 'host' => [
-                    'studio-stg-redis.trcsff.ng.0001.apn2.cache.amazonaws.com'
+                    'elc-studio-prod.gayhrs.ng.0001.apn2.cache.amazonaws.com'
                 ],
                 'port' => [
                     '6379',

@@ -41,7 +41,9 @@ class TidesqureUtil
             $accessToken = $headers['HTTP_ACCESS_TOKEN'][0];
         }
 
-        if ($accessToken !== TFConst::TS_ACCESS_TOKEN) {
+        $accessTokenConst = (APP_ENV === APP_ENV_PRODUCTION) ? TFConst::TS_ACCESS_TOKEN : TFConst::TS_DEV_ACCESS_TOKEN;
+
+        if ($accessToken != $accessTokenConst) {
             LogMessage::error('TS Auth Fail - AccessToken :: ' . $accessToken);
             return false;
         }

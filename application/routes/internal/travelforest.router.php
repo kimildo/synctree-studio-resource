@@ -3,6 +3,9 @@
 $app->group('/synctree-tf', function () {
 
     $this->get('/getProducts', 'controllers\internal\TravelForest:getProducts')->setName('product'); // 모상품리스트
+    $this->post('/getProducts', 'controllers\internal\TravelForest:getProducts')->setName('product'); // 특정 모상품리스트
+    $this->put('/updateTideProduct', 'controllers\internal\TravelForest:updateTideProduct')->setName('product'); // 특정 모상품리스트
+
     $this->post('/getProduct', 'controllers\internal\TravelForest:getProduct')->setName('product'); // 모상품 상세정보
     $this->post('/getProduct/{subProduct}', 'controllers\internal\TravelForest:getProduct')->setName('product'); // 자상품 상세 정보
     $this->post('/authCheck', 'controllers\internal\TravelForest:authCheck')->setName('auth'); // 권한 체크
@@ -17,9 +20,17 @@ $app->group('/synctree-tf', function () {
     $this->get('/checkBookingStatus/{bookingKey:[0-9]+}', 'controllers\internal\TravelForest:checkBookingStatus')->setName('booking'); // 예약진행 매퍼
 
     $this->put('/bookingUpdate/{bookingKey:[0-9]+}/{updateType:[a-z]+}', 'controllers\internal\TravelForest:bookingUpdate')->setName('booking'); // 예약 Webhook
-    $this->put('/productUpdate/{productKey:[0-9]+}/{updateType:[a-z]+}', 'controllers\internal\TravelForest:productUpdate')->setName('booking'); // 상품 Webhook
+
+    $this->put('/productUpdate/{productKey:[0-9]+}', 'controllers\internal\TravelForest:productUpdate')->setName('booking'); // 상품 Webhook
+    $this->put('/productUpdate/{productKey:[0-9]+}/{productTypeKey:[0-9]+}', 'controllers\internal\TravelForest:productUpdate')->setName('booking'); // 상품 Webhook
 
     $this->post('/secure/getCommand', 'controllers\internal\TravelForest:getCommand')->setName('getCommand'); // 보안 프로토콜
+
+    $this->post('/flushRedis', 'controllers\internal\TravelForest:flushRedis')->setName('flushRedis'); // flush
+
+    if (APP_ENV !== APP_ENV_PRODUCTION) {
+        $this->get('/secure/getEventKey', 'controllers\internal\TravelForest:getEventKey')->setName('getCommand'); // 보안 프로토콜 이벤트키 발급
+    }
 
     $this->group('/tourvis/api', function () {
 
@@ -107,8 +118,6 @@ $app->group('/synctree-tf', function () {
         }
 
     });
-
-
 
 })
 ->add(new \middleware\Common($app->getContainer(), false))

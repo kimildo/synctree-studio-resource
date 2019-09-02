@@ -160,7 +160,7 @@ class Auth extends SynctreeConsole
                 return $this->_viewErrorMessage(ErrorConst::ERROR_DESCRIPTION_ARRAY[ErrorConst::ERROR_NOT_ALLOW_REQ_METHOD]);
             }
 
-            if (APP_ENV == APP_ENV_PRODUCTION || /*APP_ENV == APP_ENV_DEVELOPMENT ||*/ APP_ENV == APP_ENV_STAGING) {
+            if (APP_ENV == APP_ENV_PRODUCTION /* || APP_ENV == APP_ENV_DEVELOPMENT || APP_ENV == APP_ENV_STAGING */) {
 
                 $csrf = [
                     'csrf_name'  => $params['csrf_name'] ?? null,

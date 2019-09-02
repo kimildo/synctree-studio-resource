@@ -60,10 +60,17 @@ class Common
         /*
          * logging http request body contents
          */
-        LogMessage::info('[middleware] request:: ' . json_encode($params, JSON_UNESCAPED_UNICODE));
+        if (APP_ENV === APP_ENV_PRODUCTION) {
+            $paramStr = json_encode($params, JSON_UNESCAPED_UNICODE);
+            $paramLength = mb_strlen($paramStr, 'UTF-8');
+            $paramStr = ($paramLength > 1024) ? mb_substr($paramStr, 0, 1024, 'UTF-8') . ' ...... ' . mb_substr($paramStr, $paramLength - 100, $paramLength, 'UTF-8') : $paramStr;
+            LogMessage::info('[middleware] request:: ' . json_encode($paramStr, JSON_UNESCAPED_UNICODE));
+        } else {
+            LogMessage::info('[middleware] request:: ' . json_encode($params, JSON_UNESCAPED_UNICODE));
+        }
 
         $ref = $request->getHeader('HTTP_REFERER');
-        LogMessage::info('[middleware] refferer::' . json_encode($ref, JSON_UNESCAPED_UNICODE));
+        LogMessage::info('[middleware] refferer::' . json_encode($ref, JSON_UNESCAPED_UNICODE) . PHP_EOL . PHP_EOL);
 
         /*
          * set http params to requeset attribute
@@ -72,9 +79,6 @@ class Common
                  ->withAttribute('route_name', $routeName)
                  ->withAttribute('method_name', $uri)
                  ;
-
-
-
 
         /*
          * call next middleware or application
@@ -88,7 +92,7 @@ class Common
             /*
              * logging http response body contents
              */
-            LogMessage::info('[middleware]response::' . $response->getBody());
+            LogMessage::info('[middleware] response::' . $response->getBody());
         }
 
         return $response;

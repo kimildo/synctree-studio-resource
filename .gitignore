@@ -123,3 +123,6 @@ yarn-debug.log*
 yarn-error.log*
 /build/
 build/
+/application/controllers/generated/usr
+/application/routes/generated/usr
+/application/views/generated/usr

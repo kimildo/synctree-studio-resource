@@ -69,6 +69,12 @@ class RedisMgr
         return $connection;
     }
 
+    /**
+     * @param $index
+     *
+     * @return \Redis
+     * @throws \Exception
+     */
     private function tryConnect($index)
     {
         try {
@@ -347,5 +353,59 @@ class RedisMgr
 
             throw $ex;
         }
+    }
+
+    /**
+     *
+     * @param $db
+     * @param $key
+     * @param $mode
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function flush($db, $key, $mode)
+    {
+        try {
+
+            if (empty($db)) {
+                throw new \Exception('No SELECT DB');
+            }
+
+            $shard = RedisUtil::getShard(($key ?? 'flushdb'));
+            $index = $shard % count($this->redisHost);
+
+            $connection = $this->tryConnect($index);
+            $this->selectDb($connection, $db);
+
+            switch($mode) {
+                case 'pattern' :
+                    if (empty($key)) break;
+                    $findKeys = $connection->getKeys($key . '*');
+                    if (!empty($findKeys)) {
+                        foreach ($findKeys as $fk) {
+                            $connection->del($fk);
+                        }
+                    }
+                    LogMessage::info('key pattern delete');
+                    break;
+                case 'key' :
+                    $connection->del($key);
+                    LogMessage::info('key delete');
+                    break;
+                default :
+                    $connection->flushDB();
+                    LogMessage::info('flushDB');
+                    break;
+            }
+
+            return true;
+
+        } catch (\Exception $ex) {
+            $logs = 'mode[' . $mode . ']_res[' . $ex->getMessage() . ']';
+            LogMessage::error($logs);
+            throw $ex;
+        }
+
     }
 }

@@ -277,4 +277,18 @@ class RedisUtil
 
         return $resData;
     }
+
+    /**
+     * @param RedisMgr $redis
+     * @param          $db
+     * @param          $key
+     * @param          $mode
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public static function flush(RedisMgr $redis, $db, $key = null, $mode = null)
+    {
+        return $redis->flush($db, $key, $mode);
+    }
 }

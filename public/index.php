@@ -45,6 +45,9 @@
     preg_match("/([a-z0-9-]*\.)*studio.synctreengine.com/i", $host, $match);
     $domain = (is_array($match) && isset($match[1])) ? $match[1] : 'prod.';
 
+    foreach (glob(APP_DIR . '/routes/internal/*.router.php') as $route) { include_once $route; }
+    foreach (glob(APP_DIR . '/routes/generated/usr/*/*.router.php') as $route) {include_once $route;}
+
     switch ($domain) {
         case 'local.':
         case 'dev.':
@@ -53,12 +56,7 @@
         case 'poc.' :
             foreach (glob(APP_DIR . '/routes/*.router.php') as $route) { include_once $route; }
             foreach (glob(APP_DIR . '/routes/console/*.router.php') as $route) { include_once $route; }
-            foreach (glob(APP_DIR . '/routes/internal/*.router.php') as $route) { include_once $route; }
             break;
-    }
-
-    foreach (glob(APP_DIR . '/routes/generated/usr/*/*.router.php') as $route) {
-        include_once $route;
     }
 
 
